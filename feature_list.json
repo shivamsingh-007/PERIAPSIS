@@ -471,19 +471,19 @@
     "id": 79,
     "name": "Next.js admin UI - run explorer",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 80,
     "name": "Next.js admin UI - trace viewer",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 81,
     "name": "Next.js admin UI - metrics dashboard",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 82,
@@ -939,37 +939,37 @@
     "id": 157,
     "name": "Run timeline visualization",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 158,
     "name": "Cost breakdown by node",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 159,
     "name": "Memory browser UI",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 160,
     "name": "Reflection feed UI",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 161,
     "name": "Governance matrix UI",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 162,
     "name": "Incident response console UI",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 163,
@@ -987,7 +987,7 @@
     "id": 165,
     "name": "Run comparison view",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 166,
@@ -999,7 +999,7 @@
     "id": 167,
     "name": "Bulk run operations",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 168,
