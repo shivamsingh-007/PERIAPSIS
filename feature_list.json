@@ -495,37 +495,37 @@
     "id": 83,
     "name": "Idempotency keys on write paths",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 84,
     "name": "Hook system with timeout/fallback",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 85,
     "name": "Performance testing (P95 < 300ms)",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 86,
     "name": "API documentation",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 87,
     "name": "Deployment scripts",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 88,
     "name": "Staging deployment",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 89,
@@ -639,13 +639,13 @@
     "id": 107,
     "name": "before_ship_gate hook",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 108,
     "name": "after_incident hook",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 109,
@@ -1083,7 +1083,7 @@
     "id": 181,
     "name": "Rate limiting per tenant",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 182,
@@ -1101,7 +1101,7 @@
     "id": 184,
     "name": "Graceful shutdown handling",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 185,
@@ -1131,7 +1131,7 @@
     "id": 189,
     "name": "Structured logging (JSON)",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 190,

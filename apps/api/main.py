@@ -8,12 +8,18 @@ from pydantic import BaseModel
 from sqlalchemy import text
 
 from packages.schemas.database import get_engine, init_engine
+from packages.logging.structured import setup_structured_logging, get_logger
+from packages.middleware.idempotency import IdempotencyMiddleware
+from packages.middleware.rate_limit import RateLimitMiddleware
+from packages.middleware.shutdown import graceful_shutdown_lifespan
 
 from .middleware.tracing import TracingMiddleware, setup_langfuse
 from .routes.approvals import router as approvals_router
 from .routes.harness import router as harness_router
 from .routes.memory import router as memory_router
 from .routes.runs import router as runs_router
+
+logger = get_logger("api")
 
 
 class HealthResponse(BaseModel):
@@ -24,12 +30,15 @@ class HealthResponse(BaseModel):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    setup_structured_logging()
     database_url = "postgresql+asyncpg://agentic:agentic_dev@localhost:5432/agentic_loop"
     init_engine(database_url)
     setup_langfuse(app)
+    logger.info("Application starting")
     yield
     from packages.schemas.database import close_engine
 
+    logger.info("Application shutting down")
     await close_engine()
 
 
@@ -41,6 +50,8 @@ app = FastAPI(
 )
 
 app.add_middleware(TracingMiddleware)
+app.add_middleware(IdempotencyMiddleware)
+app.add_middleware(RateLimitMiddleware)
 app.include_router(runs_router)
 app.include_router(approvals_router)
 app.include_router(memory_router)

@@ -151,3 +151,35 @@ M4 Built:
 
 Status: 128/210 features complete (M3 done, M4 partial)
 Next: M4 remaining (UI features), then Milestone 5
+
+Session 8 - M5: Polish & Hardening (BUILD)
+==========================================
+Built:
+- IdempotencyMiddleware (packages/middleware/idempotency.py):
+  - Idempotency-Key header support
+  - Content hash for request dedup
+  - Response caching with TTL
+  - X-Idempotent-Replay header
+- RateLimitMiddleware (packages/middleware/rate_limit.py):
+  - Per-tenant rate limiting
+  - Configurable limits (per minute/hour)
+  - X-RateLimit-* headers
+  - Retry-After on 429
+- Structured Logging (packages/logging/structured.py):
+  - JSON log format
+  - Context fields (tenant_id, run_id, trace_id)
+  - Convenience methods for run/step/policy events
+- GracefulShutdownManager (packages/middleware/shutdown.py):
+  - Signal handling (SIGINT/SIGTERM)
+  - Active request tracking
+  - Resource cleanup on shutdown
+- Deployment Scripts:
+  - scripts/deploy.sh — staging deployment script
+  - infra/docker/docker-compose.staging.yml
+  - infra/docker/Dockerfile
+- Performance Test Setup:
+  - tests/performance/test_latency.py
+  - P95 < 300ms target validation
+
+Status: 139/210 features complete (M5 core done)
+Next: Remaining advanced features (Fleet, Auth, Multi-tenant)
