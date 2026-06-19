@@ -669,7 +669,7 @@
     "id": 112,
     "name": "Rule: factual claims require evidence",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 113,
@@ -681,13 +681,13 @@
     "id": 114,
     "name": "Rule: every run emits traces",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 115,
     "name": "Rule: terminal state includes reason",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 116,
@@ -729,79 +729,79 @@
     "id": 122,
     "name": "Reflection clustering",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 123,
     "name": "Candidate lesson generation",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 124,
     "name": "Lesson simulation on eval suite",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 125,
     "name": "Lesson approval workflow",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 126,
     "name": "Skill versioning",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 127,
     "name": "Skill rollback API",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 128,
     "name": "Fleet coordinator agent",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 129,
     "name": "Worker pool management",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 130,
     "name": "Git worktree isolation",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 131,
     "name": "Budget slicing for sub-jobs",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 132,
     "name": "Cross-agent communication logging",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 133,
     "name": "Merge conflict resolution",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 134,
     "name": "Auth middleware (OIDC/JWT)",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 135,
@@ -813,7 +813,7 @@
     "id": 136,
     "name": "Secrets management integration",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 137,
@@ -825,7 +825,7 @@
     "id": 138,
     "name": "Encrypted secrets",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 139,
@@ -1011,31 +1011,31 @@
     "id": 169,
     "name": "Run templates",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 170,
     "name": "Multi-tenant workspace isolation",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 171,
     "name": "Tenant-level budget quotas",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 172,
     "name": "Usage analytics per tenant",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 173,
     "name": "Custom hook plugins",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 174,
@@ -1047,13 +1047,13 @@
     "id": 175,
     "name": "Email notifications for escalations",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 176,
     "name": "Slack integration for approvals",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 177,
@@ -1065,19 +1065,19 @@
     "id": 178,
     "name": "Compliance report generation",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 179,
     "name": "Data retention policies",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 180,
     "name": "GDPR data deletion support",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 181,
@@ -1089,13 +1089,13 @@
     "id": 182,
     "name": "Request queuing for high load",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 183,
     "name": "Health check with dependency status",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 184,
@@ -1107,7 +1107,7 @@
     "id": 185,
     "name": "Circuit breaker for external services",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 186,
@@ -1119,7 +1119,7 @@
     "id": 187,
     "name": "Dead letter queue for failed tasks",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 188,
@@ -1137,7 +1137,7 @@
     "id": 190,
     "name": "Log aggregation integration",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 191,
@@ -1149,19 +1149,19 @@
     "id": 192,
     "name": "Feature flags for gradual rollout",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 193,
     "name": "A/B testing framework for prompts",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 194,
     "name": "Prompt version management",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 195,
@@ -1185,13 +1185,13 @@
     "id": 198,
     "name": "Hallucination detection hints",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 199,
     "name": "Fact-checking against memory",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 200,
@@ -1221,25 +1221,25 @@
     "id": 204,
     "name": "Graph visualization export",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 205,
     "name": "Run replay with modified state",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 206,
     "name": "What-if analysis for runs",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 207,
     "name": "Cost prediction before run",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 208,
