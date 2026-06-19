@@ -25,6 +25,7 @@ from .routes.scheduler_api import router as scheduler_router
 from .routes.webhook_api import router as webhook_router
 from .routes.websocket import router as ws_router
 from .routes.resilience import router as resilience_router
+from .routes.fleet import router as fleet_router
 
 logger = get_logger("api")
 
@@ -71,6 +72,7 @@ app.include_router(webhook_router)
 app.include_router(scheduler_router)
 app.include_router(ws_router)
 app.include_router(resilience_router)
+app.include_router(fleet_router)
 
 
 @app.get("/health", response_model=HealthResponse)
