@@ -99,115 +99,115 @@
     "id": 17,
     "name": "Typed RunState Pydantic model",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 18,
     "name": "TerminalState enum with all 8 states",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 19,
     "name": "State transition table",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 20,
     "name": "Main loop graph with intake node",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 21,
     "name": "Main loop graph with policy_check node",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 22,
     "name": "Main loop graph with plan node",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 23,
     "name": "Main loop graph with execute node",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 24,
     "name": "Main loop graph with validate node",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 25,
     "name": "Main loop graph with checkpoint node",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 26,
     "name": "Main loop graph with reflect node",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 27,
     "name": "Main loop graph with decide node",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 28,
     "name": "Main loop graph with escalate node",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 29,
     "name": "CheckpointStore save/load/diff",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 30,
     "name": "Budget enforcement - max iterations",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 31,
     "name": "Budget enforcement - max cost",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 32,
     "name": "Budget enforcement - max runtime",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 33,
     "name": "No-progress detection",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 34,
     "name": "Run CRUD API endpoints",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 35,
     "name": "Run status tracking",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 36,
@@ -531,13 +531,13 @@
     "id": 89,
     "name": "BaseConnector interface",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 90,
     "name": "Tool execution with permission checks",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 91,
@@ -693,37 +693,37 @@
     "id": 116,
     "name": "Langfuse trace for every request",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 117,
     "name": "Langfuse span for every tool call",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 118,
     "name": "Langfuse generation for every LLM call",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 119,
     "name": "Cost tracking per run_step",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 120,
     "name": "Latency tracking per run_step",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 121,
     "name": "Token usage tracking",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 122,
@@ -831,19 +831,19 @@
     "id": 139,
     "name": "Unit tests for state model",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 140,
     "name": "Unit tests for budget enforcement",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 141,
     "name": "Unit tests for checkpoint store",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 142,
@@ -909,7 +909,7 @@
     "id": 152,
     "name": "Budget policy YAML configuration",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 153,
@@ -927,7 +927,7 @@
     "id": 155,
     "name": "Run replay from checkpoint",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 156,
@@ -1113,7 +1113,7 @@
     "id": 186,
     "name": "Retry logic with exponential backoff",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 187,
@@ -1167,19 +1167,19 @@
     "id": 195,
     "name": "Model fallback (provider down)",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 196,
     "name": "Token budget per LLM call",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 197,
     "name": "Response validation (schema check)",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 198,
@@ -1209,13 +1209,13 @@
     "id": 202,
     "name": "Context window management",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 203,
     "name": "State serialization/deserialization",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 204,
@@ -1251,12 +1251,12 @@
     "id": 209,
     "name": "Automatic retry for transient errors",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 210,
     "name": "Run cancellation API",
     "milestone": 1,
-    "passes": false
+    "passes": true
   }
 ]

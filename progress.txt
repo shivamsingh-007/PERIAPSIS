@@ -23,19 +23,41 @@ Built:
 - docker-compose.yml (Postgres+pgvector + Redis)
 - .env.example
 - SQLAlchemy Base and engine (packages/schemas/database.py)
-- All ORM models (packages/schemas/models.py):
-  - Run, RunStep, MemoryItem, Skill, Reflection, HarnessScore, GovernanceEvent, FleetJob
+- All ORM models (packages/schemas/models.py)
 - Alembic setup (alembic.ini, env.py, script.py.mako)
 - FastAPI app with health check (apps/api/main.py)
 - Langfuse tracing middleware (apps/api/middleware/tracing.py)
-- Typed RunState model (packages/runtime/state.py):
-  - TerminalState enum (8 states)
-  - RunStatus enum
-  - RiskTier enum
-  - BudgetPolicy, Action, StepResult, RunState
-- LangGraph skeleton (packages/runtime/graph.py):
-  - Main loop: intake → policy_check → plan → execute → validate → checkpoint → reflect → decide
-  - Conditional edges for continue/escalate/stop
+- Typed RunState model (packages/runtime/state.py)
+- LangGraph skeleton (packages/runtime/graph.py)
 
 Status: 16/210 features complete (Milestone 0 done)
-Next: Milestone 1 - Core Runtime (budget enforcement, checkpoint store, run CRUD API)
+
+Session 4 - Milestone 1: Core Runtime (BUILD)
+==============================================
+Built:
+- CheckpointStore (packages/runtime/checkpoint.py):
+  - save(): persist state to Postgres with checkpoint_ref
+  - load(): restore latest state from Postgres
+  - diff(): compare two checkpoints
+- Run CRUD API (apps/api/routes/runs.py):
+  - POST /runs — create run
+  - GET /runs/{run_id} — get run
+  - GET /runs — list runs with filtering
+  - PATCH /runs/{run_id} — update run status
+  - POST /runs/execute — create + execute run end-to-end
+- Updated graph nodes (packages/runtime/graph.py):
+  - intake: risk tier classification
+  - policy_check: budget enforcement
+  - plan: generates action plan
+  - execute: runs actions, tracks cost/tokens
+  - validate: checks invariants
+  - checkpoint: persists state via CheckpointStore
+  - reflect: tracks progress
+  - decide: terminal state determination
+- RunService (packages/runtime/service.py):
+  - Orchestrates graph execution
+  - Updates run status in database
+  - Handles errors and terminal states
+
+Status: 56/210 features complete (Milestone 1 done)
+Next: Milestone 2 - Governance & Validation
