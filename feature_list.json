@@ -273,151 +273,151 @@
     "id": 46,
     "name": "Memory write pipeline",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 47,
     "name": "Memory source attribution",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 48,
     "name": "Memory confidence scoring",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 49,
     "name": "Memory TTL management",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 50,
     "name": "Memory retrieval by context",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 51,
     "name": "Memory deduplication via content hash",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 52,
     "name": "Memory write filter policies",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 53,
     "name": "Step reflection node",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 54,
     "name": "Error reflection node",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 55,
     "name": "Strategy reflection node",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 56,
     "name": "Final reflection node",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 57,
     "name": "Lesson promotion workflow",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 58,
     "name": "Memory API endpoints",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 59,
     "name": "Memory scope isolation (user/org/project)",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 60,
     "name": "Eval scenario runner",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 61,
     "name": "Scenario: Simple Q&A",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 62,
     "name": "Scenario: Budget enforcement",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 63,
     "name": "Scenario: Policy violation",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 64,
     "name": "Scenario: Tool failure recovery",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 65,
     "name": "Scenario: Memory retrieval",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 66,
     "name": "Scenario: Human escalation",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 67,
     "name": "Scenario: No-progress detection",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 68,
     "name": "Scenario: Concurrent runs",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 69,
     "name": "Scenario: Crash recovery",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 70,
     "name": "Scenario: Cost tracking",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 71,
@@ -1201,7 +1201,7 @@
   },
   {
     "id": 201,
-    "name": "Memory consolidation (old → summary)",
+    "name": "Memory consolidation (old \u00e2\u2020\u2019 summary)",
     "milestone": 3,
     "passes": false
   },

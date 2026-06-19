@@ -67,3 +67,41 @@ Built:
 
 Status: 89/210 features complete (Milestone 2 done)
 Next: Milestone 3 - Memory & Reflection
+
+Session 6 - Milestone 3: Memory & Reflection (BUILD)
+====================================================
+Built:
+- MemoryStore (packages/memory/store.py):
+  - write() with deduplication via content hash
+  - retrieve() with scope/type/confidence filters
+  - retrieve_by_context() for keyword search
+  - deduplicate() and expire_old() maintenance
+- MemoryWriteFilter (packages/memory/write_filter.py):
+  - Source attribution requirements for facts
+  - Confidence threshold filtering
+  - TTL calculation by memory type and confidence
+  - FilterDecision: ALLOW/DENY/REQUIRE_SOURCE/LOW_CONFIDENCE
+- CriticNode (packages/reflection/critic.py):
+  - step_reflect() — evaluate individual steps
+  - error_reflect() — analyze failures
+  - strategy_reflect() — assess iteration progress
+  - final_reflect() — terminal state analysis
+- LessonPromoter (packages/memory/promotion.py):
+  - submit_for_promotion() with governance logging
+  - approve_promotion() and reject_promotion()
+  - get_pending_promotions() for human review queue
+- Memory API (apps/api/routes/memory.py):
+  - POST /memory/memories — write with filter
+  - POST /memory/memories/search — retrieve
+  - POST /memory/memories/deduplicate — cleanup
+  - POST /memory/memories/expire — TTL cleanup
+  - DELETE /memory/memories/{id} — delete
+  - POST /memory/reflections/* — all reflection types
+  - POST /memory/lessons/promote — submit for approval
+  - POST /memory/lessons/approve — approve lesson
+  - POST /memory/lessons/reject — reject lesson
+  - GET /memory/lessons/pending — review queue
+- Registered memory router in main.py
+
+Status: ~114/210 features complete (Milestone 3 partial)
+Next: M3 remaining features, then Milestone 4
