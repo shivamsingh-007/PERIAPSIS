@@ -8,6 +8,8 @@ from langgraph.graph import END, StateGraph
 
 from packages.governance.events import governance_event_logger
 from packages.governance.policy import PolicyDecision, policy_engine
+from packages.graphify.context_assembler import context_assembler
+from packages.graphify.impact_tracer import impact_tracer
 from packages.runtime.checkpoint import checkpoint_store
 from packages.runtime.state import (
     Action,
@@ -43,11 +45,30 @@ def policy_check(state: RunState) -> dict:
     return {}
 
 
-def plan(state: RunState) -> dict:
-    """Generate action plan based on goal."""
+async def plan(state: RunState) -> dict:
+    """Generate action plan based on goal with graph-aware context."""
+    try:
+        context = await context_assembler.assemble_for_planning(state.goal)
+        graph_context = {
+            "sources": context.sources_consulted,
+            "chunks_count": len(context.chunks),
+            "token_estimate": context.total_tokens_estimate,
+            "graph_queries": context.graph_queries,
+        }
+    except Exception:
+        graph_context = {}
+
     actions = [
-        Action(action_type="research", tool_name="search", input_data={"query": state.goal}),
-        Action(action_type="execute", tool_name="default", input_data={"goal": state.goal}),
+        Action(
+            action_type="research",
+            tool_name="search",
+            input_data={"query": state.goal, "graph_context": graph_context},
+        ),
+        Action(
+            action_type="execute",
+            tool_name="default",
+            input_data={"goal": state.goal, "graph_context": graph_context},
+        ),
     ]
     return {"plan": actions}
 
@@ -183,15 +204,24 @@ async def checkpoint_node(state: RunState) -> dict:
 
 
 def reflect(state: RunState) -> dict:
-    """Generate step reflection."""
+    """Generate step reflection with graph-aware critique."""
     if not state.steps:
         return {}
 
     last_step = state.steps[-1]
+
+    critique = {}
+    try:
+        if last_step.action and last_step.action.tool_name:
+            critique = impact_tracer.get_architectural_critique(last_step.action.tool_name)
+    except Exception:
+        pass
+
     return {
         "no_progress_rounds": state.no_progress_rounds + 1
         if last_step.output.get("result", "") == ""
-        else state.no_progress_rounds
+        else state.no_progress_rounds,
+        "graph_critique": critique,
     }
 
 

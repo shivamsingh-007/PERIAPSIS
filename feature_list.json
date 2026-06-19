@@ -1258,5 +1258,65 @@
     "name": "Run cancellation API",
     "milestone": 1,
     "passes": true
+  },
+  {
+    "id": 211,
+    "name": "Graphify CLI client wrapper",
+    "milestone": 5,
+    "passes": true
+  },
+  {
+    "id": 212,
+    "name": "Knowledge graph store with caching",
+    "milestone": 5,
+    "passes": true
+  },
+  {
+    "id": 213,
+    "name": "Context assembler for graph-aware planning",
+    "milestone": 5,
+    "passes": true
+  },
+  {
+    "id": 214,
+    "name": "Impact tracer for architectural critique",
+    "milestone": 5,
+    "passes": true
+  },
+  {
+    "id": 215,
+    "name": "Graph-based task router for fleet",
+    "milestone": 5,
+    "passes": true
+  },
+  {
+    "id": 216,
+    "name": "Graph-anchored memory with concept linking",
+    "milestone": 5,
+    "passes": true
+  },
+  {
+    "id": 217,
+    "name": "Graph-aware reflection with impact analysis",
+    "milestone": 5,
+    "passes": true
+  },
+  {
+    "id": 218,
+    "name": "Graph API endpoints (query, path, explain, context, impact, route)",
+    "milestone": 5,
+    "passes": true
+  },
+  {
+    "id": 219,
+    "name": "Graph architecture overview endpoint",
+    "milestone": 5,
+    "passes": true
+  },
+  {
+    "id": 220,
+    "name": "Graph-aware fleet dispatch with swarm routing",
+    "milestone": 5,
+    "passes": true
   }
 ]

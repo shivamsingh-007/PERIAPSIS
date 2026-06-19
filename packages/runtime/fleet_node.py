@@ -6,6 +6,7 @@ from packages.runtime.state import RunState, Action, StepResult, TerminalState
 from packages.fleet.coordinator import FleetCoordinator, FleetJob, FleetJobState, fleet_coordinator
 from packages.fleet.swarm import swarm_manager
 from packages.fleet.compliance import RiskTier
+from packages.graphify.graph_router import graph_router
 from packages.logging.structured import get_logger
 
 logger = get_logger("fleet_node")
@@ -79,8 +80,22 @@ async def fleet_dispatch(state: RunState) -> RunState:
 
 
 def _select_swarm(goal: str, risk_tier: RiskTier) -> str:
-    goal_lower = goal.lower()
+    decision = graph_router.route_task(goal)
 
+    swarm_map = {
+        "security": "security-swarm",
+        "governance": "governance-swarm",
+        "fleet": "research-swarm",
+        "testing": "code-swarm",
+    }
+
+    if decision.confidence > 0.3:
+        mapped = swarm_map.get(decision.target_agent)
+        if mapped:
+            logger.info(f"Graph router selected swarm: {mapped} (confidence: {decision.confidence})")
+            return mapped
+
+    goal_lower = goal.lower()
     if any(word in goal_lower for word in ["security", "vulnerability", "audit", "scan"]):
         return "security-swarm"
     elif any(word in goal_lower for word in ["research", "investigate", "analyze", "find"]):

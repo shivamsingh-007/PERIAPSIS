@@ -23,6 +23,8 @@ class MemoryStore:
         confidence: float = 0.5,
         ttl_days: int = 365,
         scope_ref: uuid.UUID | None = None,
+        graph_node_id: str | None = None,
+        graph_concepts: list[str] | None = None,
     ) -> uuid.UUID | None:
         content_hash = self._hash_content(content)
 
@@ -33,6 +35,12 @@ class MemoryStore:
 
         memory_id = uuid.uuid4()
         expires_at = datetime.utcnow() + timedelta(days=ttl_days)
+
+        graph_metadata = {}
+        if graph_node_id:
+            graph_metadata["graph_node_id"] = graph_node_id
+        if graph_concepts:
+            graph_metadata["graph_concepts"] = graph_concepts
 
         async with get_session() as session:
             await session.execute(
@@ -54,7 +62,7 @@ class MemoryStore:
                     "memory_type": memory_type,
                     "content": content,
                     "content_hash": content_hash,
-                    "source_ref": source_ref,
+                    "source_ref": {**(source_ref or {}), **graph_metadata},
                     "confidence": confidence,
                     "ttl_days": ttl_days,
                     "expires_at": expires_at,
@@ -198,6 +206,44 @@ class MemoryStore:
                 {"memory_id": memory_id, "tenant_id": tenant_id},
             )
             return result.rowcount > 0
+
+    async def get_by_graph_concept(self, tenant_id: uuid.UUID, concept: str, limit: int = 10) -> list[dict]:
+        async with get_session() as session:
+            result = await session.execute(
+                text(
+                    """
+                    SELECT * FROM memory_items
+                    WHERE tenant_id = :tenant_id
+                    AND source_ref->>'graph_concepts' LIKE :concept_pattern
+                    AND (expires_at IS NULL OR expires_at > NOW())
+                    ORDER BY confidence DESC
+                    LIMIT :limit
+                    """
+                ),
+                {
+                    "tenant_id": tenant_id,
+                    "concept_pattern": f"%{concept}%",
+                    "limit": limit,
+                },
+            )
+            rows = result.mappings().all()
+            return [dict(r) for r in rows]
+
+    async def get_by_graph_node(self, tenant_id: uuid.UUID, node_id: str) -> dict | None:
+        async with get_session() as session:
+            result = await session.execute(
+                text(
+                    """
+                    SELECT * FROM memory_items
+                    WHERE tenant_id = :tenant_id
+                    AND source_ref->>'graph_node_id' = :node_id
+                    LIMIT 1
+                    """
+                ),
+                {"tenant_id": tenant_id, "node_id": node_id},
+            )
+            row = result.mappings().first()
+            return dict(row) if row else None
 
 
 memory_store = MemoryStore()
