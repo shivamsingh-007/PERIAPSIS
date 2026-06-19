@@ -423,49 +423,49 @@
     "id": 71,
     "name": "Harness scoring",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 72,
     "name": "Gate blocking on failed scenarios",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 73,
     "name": "Metrics: run_success_rate",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 74,
     "name": "Metrics: cost_per_run",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 75,
     "name": "Metrics: tool_error_rate",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 76,
     "name": "Metrics: no_progress_stop_rate",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 77,
     "name": "Metrics: human_escalation_rate",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 78,
     "name": "Metrics: p95_orchestration_overhead",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 79,
@@ -615,25 +615,25 @@
     "id": 103,
     "name": "before_memory_write hook",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 104,
     "name": "after_memory_write hook",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 105,
     "name": "before_reflection hook",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 106,
     "name": "after_reflection hook",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 107,
@@ -1197,13 +1197,13 @@
     "id": 200,
     "name": "Conflict resolution for memory writes",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 201,
     "name": "Memory consolidation (old \u00e2\u2020\u2019 summary)",
     "milestone": 3,
-    "passes": false
+    "passes": true
   },
   {
     "id": 202,

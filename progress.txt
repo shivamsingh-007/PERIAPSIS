@@ -105,3 +105,49 @@ Built:
 
 Status: ~114/210 features complete (Milestone 3 partial)
 Next: M3 remaining features, then Milestone 4
+
+Session 7 - M3 Complete + M4 Partial (BUILD)
+=============================================
+M3 Remaining Built:
+- HookRegistry (packages/hooks/registry.py):
+  - register/unregister hooks by type
+  - execute hooks with timeout and fallback-to-continue
+  - Hook types: before/after memory write, reflection, tool call, etc.
+  - Execution log tracking
+- MemoryConsolidator (packages/memory/consolidation.py):
+  - consolidate_old_memories() — merge old memories into summaries
+  - TTL-based group detection, summary generation
+  - Stats tracking for consolidation health
+- MemoryConflictResolver (packages/memory/conflict.py):
+  - Strategies: highest_confidence, most_recent, keep_both, merge, human_decides
+  - Conflict detection and resolution for memory writes
+
+M4 Built:
+- HarnessScorer (packages/harness/scoring.py):
+  - Category-based scoring (correctness, efficiency, governance, cost, safety)
+  - Scenario registration and scoring
+  - Gate blocking on required scenario failures
+- MetricsCollector (packages/harness/metrics.py):
+  - Record metrics: run_success_rate, cost_per_run, tool_error_rate, etc.
+  - Flush to metrics_store table
+  - Query and aggregate metrics by tenant/time
+- ShipGate (packages/harness/gate.py):
+  - evaluate() — check run score against gate rules
+  - Block on required scenario failures
+  - Gate history tracking via governance_events
+- EvalRunner (packages/harness/eval_runner.py):
+  - Register and run eval scenarios with timeout
+  - Track results and generate summary
+- Harness API (apps/api/routes/harness.py):
+  - POST /harness/score — score a run
+  - GET /harness/scenarios — list registered scenarios
+  - GET /harness/score/{run_id} — get run score
+  - POST /harness/metrics/query — query metrics
+  - POST /harness/metrics/aggregate — aggregate metrics
+  - GET /harness/gate/history/{tenant_id} — gate history
+  - GET /harness/gate/blocked/{run_id} — check if blocked
+  - POST /harness/eval/run-all — run all evals
+  - GET /harness/eval/results — get eval results
+
+Status: 128/210 features complete (M3 done, M4 partial)
+Next: M4 remaining (UI features), then Milestone 5

@@ -11,6 +11,7 @@ from packages.schemas.database import get_engine, init_engine
 
 from .middleware.tracing import TracingMiddleware, setup_langfuse
 from .routes.approvals import router as approvals_router
+from .routes.harness import router as harness_router
 from .routes.memory import router as memory_router
 from .routes.runs import router as runs_router
 
@@ -43,6 +44,7 @@ app.add_middleware(TracingMiddleware)
 app.include_router(runs_router)
 app.include_router(approvals_router)
 app.include_router(memory_router)
+app.include_router(harness_router)
 
 
 @app.get("/health", response_model=HealthResponse)
