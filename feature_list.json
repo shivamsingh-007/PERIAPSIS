@@ -3,97 +3,97 @@
     "id": 1,
     "name": "Repository skeleton with all packages",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 2,
     "name": "FastAPI app with health check endpoint",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 3,
     "name": "Docker Compose with Postgres+pgvector and Redis",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 4,
     "name": "SQLAlchemy Base and engine setup",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 5,
     "name": "Run and RunStep ORM models",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 6,
     "name": "MemoryItem ORM model",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 7,
     "name": "GovernanceEvent ORM model",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 8,
     "name": "Reflection ORM model",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 9,
     "name": "HarnessScore ORM model",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 10,
     "name": "Skill ORM model",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 11,
     "name": "FleetJob ORM model",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 12,
     "name": "Alembic migration setup",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 13,
     "name": "Initial migration creates all tables",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 14,
     "name": "Langfuse tracing middleware",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 15,
     "name": ".env.example with all required vars",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 16,
     "name": "pyproject.toml with all dependencies",
     "milestone": 0,
-    "passes": false
+    "passes": true
   },
   {
     "id": 17,

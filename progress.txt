@@ -15,7 +15,27 @@ Session 2 - Spec & Feature List
 - Updated init.sh with correct stack commands (FastAPI + Postgres + Docker)
 - Committed changes
 
-Current State:
-- 210 features tracked, all passes: false
-- Spec complete, ready for /build
-- Milestone 0 (Foundation) is first to implement
+Session 3 - Milestone 0: Foundation (BUILD)
+=============================================
+Built:
+- Repository skeleton (18 directories, 12 __init__.py files)
+- pyproject.toml with all dependencies
+- docker-compose.yml (Postgres+pgvector + Redis)
+- .env.example
+- SQLAlchemy Base and engine (packages/schemas/database.py)
+- All ORM models (packages/schemas/models.py):
+  - Run, RunStep, MemoryItem, Skill, Reflection, HarnessScore, GovernanceEvent, FleetJob
+- Alembic setup (alembic.ini, env.py, script.py.mako)
+- FastAPI app with health check (apps/api/main.py)
+- Langfuse tracing middleware (apps/api/middleware/tracing.py)
+- Typed RunState model (packages/runtime/state.py):
+  - TerminalState enum (8 states)
+  - RunStatus enum
+  - RiskTier enum
+  - BudgetPolicy, Action, StepResult, RunState
+- LangGraph skeleton (packages/runtime/graph.py):
+  - Main loop: intake → policy_check → plan → execute → validate → checkpoint → reflect → decide
+  - Conditional edges for continue/escalate/stop
+
+Status: 16/210 features complete (Milestone 0 done)
+Next: Milestone 1 - Core Runtime (budget enforcement, checkpoint store, run CRUD API)
