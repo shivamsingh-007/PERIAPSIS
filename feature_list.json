@@ -1,1052 +1,1262 @@
 [
   {
     "id": 1,
-    "name": "Feature 1",
+    "name": "Repository skeleton with all packages",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 2,
-    "name": "Feature 2",
+    "name": "FastAPI app with health check endpoint",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 3,
-    "name": "Feature 3",
+    "name": "Docker Compose with Postgres+pgvector and Redis",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 4,
-    "name": "Feature 4",
+    "name": "SQLAlchemy Base and engine setup",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 5,
-    "name": "Feature 5",
+    "name": "Run and RunStep ORM models",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 6,
-    "name": "Feature 6",
+    "name": "MemoryItem ORM model",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 7,
-    "name": "Feature 7",
+    "name": "GovernanceEvent ORM model",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 8,
-    "name": "Feature 8",
+    "name": "Reflection ORM model",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 9,
-    "name": "Feature 9",
+    "name": "HarnessScore ORM model",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 10,
-    "name": "Feature 10",
+    "name": "Skill ORM model",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 11,
-    "name": "Feature 11",
+    "name": "FleetJob ORM model",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 12,
-    "name": "Feature 12",
+    "name": "Alembic migration setup",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 13,
-    "name": "Feature 13",
+    "name": "Initial migration creates all tables",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 14,
-    "name": "Feature 14",
+    "name": "Langfuse tracing middleware",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 15,
-    "name": "Feature 15",
+    "name": ".env.example with all required vars",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 16,
-    "name": "Feature 16",
+    "name": "pyproject.toml with all dependencies",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 17,
-    "name": "Feature 17",
+    "name": "Typed RunState Pydantic model",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 18,
-    "name": "Feature 18",
+    "name": "TerminalState enum with all 8 states",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 19,
-    "name": "Feature 19",
+    "name": "State transition table",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 20,
-    "name": "Feature 20",
+    "name": "Main loop graph with intake node",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 21,
-    "name": "Feature 21",
+    "name": "Main loop graph with policy_check node",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 22,
-    "name": "Feature 22",
+    "name": "Main loop graph with plan node",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 23,
-    "name": "Feature 23",
+    "name": "Main loop graph with execute node",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 24,
-    "name": "Feature 24",
+    "name": "Main loop graph with validate node",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 25,
-    "name": "Feature 25",
+    "name": "Main loop graph with checkpoint node",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 26,
-    "name": "Feature 26",
+    "name": "Main loop graph with reflect node",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 27,
-    "name": "Feature 27",
+    "name": "Main loop graph with decide node",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 28,
-    "name": "Feature 28",
+    "name": "Main loop graph with escalate node",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 29,
-    "name": "Feature 29",
+    "name": "CheckpointStore save/load/diff",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 30,
-    "name": "Feature 30",
+    "name": "Budget enforcement - max iterations",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 31,
-    "name": "Feature 31",
+    "name": "Budget enforcement - max cost",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 32,
-    "name": "Feature 32",
+    "name": "Budget enforcement - max runtime",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 33,
-    "name": "Feature 33",
+    "name": "No-progress detection",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 34,
-    "name": "Feature 34",
+    "name": "Run CRUD API endpoints",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 35,
-    "name": "Feature 35",
+    "name": "Run status tracking",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 36,
-    "name": "Feature 36",
+    "name": "PolicyEngine class",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 37,
-    "name": "Feature 37",
+    "name": "Risk tier evaluation",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 38,
-    "name": "Feature 38",
+    "name": "Approval workflow - low risk (auto-approve)",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 39,
-    "name": "Feature 39",
+    "name": "Approval workflow - medium risk (human required)",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 40,
-    "name": "Feature 40",
+    "name": "Approval workflow - high risk (secondary review)",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 41,
-    "name": "Feature 41",
+    "name": "Validation gate node in graph",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 42,
-    "name": "Feature 42",
+    "name": "Governance event logging",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 43,
-    "name": "Feature 43",
+    "name": "Approval API endpoints",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 44,
-    "name": "Feature 44",
+    "name": "Policy versioning",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 45,
-    "name": "Feature 45",
+    "name": "Policy YAML parsing",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 46,
-    "name": "Feature 46",
+    "name": "Memory write pipeline",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 47,
-    "name": "Feature 47",
+    "name": "Memory source attribution",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 48,
-    "name": "Feature 48",
+    "name": "Memory confidence scoring",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 49,
-    "name": "Feature 49",
+    "name": "Memory TTL management",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 50,
-    "name": "Feature 50",
+    "name": "Memory retrieval by context",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 51,
-    "name": "Feature 51",
+    "name": "Memory deduplication via content hash",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 52,
-    "name": "Feature 52",
+    "name": "Memory write filter policies",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 53,
-    "name": "Feature 53",
+    "name": "Step reflection node",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 54,
-    "name": "Feature 54",
+    "name": "Error reflection node",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 55,
-    "name": "Feature 55",
+    "name": "Strategy reflection node",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 56,
-    "name": "Feature 56",
+    "name": "Final reflection node",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 57,
-    "name": "Feature 57",
+    "name": "Lesson promotion workflow",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 58,
-    "name": "Feature 58",
+    "name": "Memory API endpoints",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 59,
-    "name": "Feature 59",
+    "name": "Memory scope isolation (user/org/project)",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 60,
-    "name": "Feature 60",
+    "name": "Eval scenario runner",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 61,
-    "name": "Feature 61",
+    "name": "Scenario: Simple Q&A",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 62,
-    "name": "Feature 62",
+    "name": "Scenario: Budget enforcement",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 63,
-    "name": "Feature 63",
+    "name": "Scenario: Policy violation",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 64,
-    "name": "Feature 64",
+    "name": "Scenario: Tool failure recovery",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 65,
-    "name": "Feature 65",
+    "name": "Scenario: Memory retrieval",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 66,
-    "name": "Feature 66",
+    "name": "Scenario: Human escalation",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 67,
-    "name": "Feature 67",
+    "name": "Scenario: No-progress detection",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 68,
-    "name": "Feature 68",
+    "name": "Scenario: Concurrent runs",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 69,
-    "name": "Feature 69",
+    "name": "Scenario: Crash recovery",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 70,
-    "name": "Feature 70",
+    "name": "Scenario: Cost tracking",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 71,
-    "name": "Feature 71",
+    "name": "Harness scoring",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 72,
-    "name": "Feature 72",
+    "name": "Gate blocking on failed scenarios",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 73,
-    "name": "Feature 73",
+    "name": "Metrics: run_success_rate",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 74,
-    "name": "Feature 74",
+    "name": "Metrics: cost_per_run",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 75,
-    "name": "Feature 75",
+    "name": "Metrics: tool_error_rate",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 76,
-    "name": "Feature 76",
+    "name": "Metrics: no_progress_stop_rate",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 77,
-    "name": "Feature 77",
+    "name": "Metrics: human_escalation_rate",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 78,
-    "name": "Feature 78",
+    "name": "Metrics: p95_orchestration_overhead",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 79,
-    "name": "Feature 79",
+    "name": "Next.js admin UI - run explorer",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 80,
-    "name": "Feature 80",
+    "name": "Next.js admin UI - trace viewer",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 81,
-    "name": "Feature 81",
+    "name": "Next.js admin UI - metrics dashboard",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 82,
-    "name": "Feature 82",
+    "name": "Row-level security on all tables",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 83,
-    "name": "Feature 83",
+    "name": "Idempotency keys on write paths",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 84,
-    "name": "Feature 84",
+    "name": "Hook system with timeout/fallback",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 85,
-    "name": "Feature 85",
+    "name": "Performance testing (P95 < 300ms)",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 86,
-    "name": "Feature 86",
+    "name": "API documentation",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 87,
-    "name": "Feature 87",
+    "name": "Deployment scripts",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 88,
-    "name": "Feature 88",
+    "name": "Staging deployment",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 89,
-    "name": "Feature 89",
+    "name": "BaseConnector interface",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 90,
-    "name": "Feature 90",
+    "name": "Tool execution with permission checks",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 91,
-    "name": "Feature 91",
+    "name": "Search connector",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 92,
-    "name": "Feature 92",
+    "name": "Docs connector",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 93,
-    "name": "Feature 93",
+    "name": "Internal-read connector",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 94,
-    "name": "Feature 94",
+    "name": "Ticketing connector",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 95,
-    "name": "Feature 95",
+    "name": "before_run_start hook",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 96,
-    "name": "Feature 96",
+    "name": "after_run_start hook",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 97,
-    "name": "Feature 97",
+    "name": "before_plan hook",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 98,
-    "name": "Feature 98",
+    "name": "after_plan hook",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 99,
-    "name": "Feature 99",
+    "name": "before_tool_call hook",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 100,
-    "name": "Feature 100",
+    "name": "after_tool_call hook",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 101,
-    "name": "Feature 101",
+    "name": "before_checkpoint hook",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 102,
-    "name": "Feature 102",
+    "name": "after_checkpoint hook",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 103,
-    "name": "Feature 103",
+    "name": "before_memory_write hook",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 104,
-    "name": "Feature 104",
+    "name": "after_memory_write hook",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 105,
-    "name": "Feature 105",
+    "name": "before_reflection hook",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 106,
-    "name": "Feature 106",
+    "name": "after_reflection hook",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 107,
-    "name": "Feature 107",
+    "name": "before_ship_gate hook",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 108,
-    "name": "Feature 108",
+    "name": "after_incident hook",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 109,
-    "name": "Feature 109",
+    "name": "Rule: agent cannot redefine goal",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 110,
-    "name": "Feature 110",
+    "name": "Rule: agent cannot exceed budget caps",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 111,
-    "name": "Feature 111",
+    "name": "Rule: restricted writes require approval",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 112,
-    "name": "Feature 112",
+    "name": "Rule: factual claims require evidence",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 113,
-    "name": "Feature 113",
+    "name": "Rule: checker != maker",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 114,
-    "name": "Feature 114",
+    "name": "Rule: every run emits traces",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 115,
-    "name": "Feature 115",
+    "name": "Rule: terminal state includes reason",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 116,
-    "name": "Feature 116",
+    "name": "Langfuse trace for every request",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 117,
-    "name": "Feature 117",
+    "name": "Langfuse span for every tool call",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 118,
-    "name": "Feature 118",
+    "name": "Langfuse generation for every LLM call",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 119,
-    "name": "Feature 119",
+    "name": "Cost tracking per run_step",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 120,
-    "name": "Feature 120",
+    "name": "Latency tracking per run_step",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 121,
-    "name": "Feature 121",
+    "name": "Token usage tracking",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 122,
-    "name": "Feature 122",
+    "name": "Reflection clustering",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 123,
-    "name": "Feature 123",
+    "name": "Candidate lesson generation",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 124,
-    "name": "Feature 124",
+    "name": "Lesson simulation on eval suite",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 125,
-    "name": "Feature 125",
+    "name": "Lesson approval workflow",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 126,
-    "name": "Feature 126",
+    "name": "Skill versioning",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 127,
-    "name": "Feature 127",
+    "name": "Skill rollback API",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 128,
-    "name": "Feature 128",
+    "name": "Fleet coordinator agent",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 129,
-    "name": "Feature 129",
+    "name": "Worker pool management",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 130,
-    "name": "Feature 130",
+    "name": "Git worktree isolation",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 131,
-    "name": "Feature 131",
+    "name": "Budget slicing for sub-jobs",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 132,
-    "name": "Feature 132",
+    "name": "Cross-agent communication logging",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 133,
-    "name": "Feature 133",
+    "name": "Merge conflict resolution",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 134,
-    "name": "Feature 134",
+    "name": "Auth middleware (OIDC/JWT)",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 135,
-    "name": "Feature 135",
+    "name": "RBAC roles (admin/operator/viewer)",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 136,
-    "name": "Feature 136",
+    "name": "Secrets management integration",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 137,
-    "name": "Feature 137",
+    "name": "Least-privilege connector execution",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 138,
-    "name": "Feature 138",
+    "name": "Encrypted secrets",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 139,
-    "name": "Feature 139",
+    "name": "Unit tests for state model",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 140,
-    "name": "Feature 140",
+    "name": "Unit tests for budget enforcement",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 141,
-    "name": "Feature 141",
+    "name": "Unit tests for checkpoint store",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 142,
-    "name": "Feature 142",
+    "name": "Unit tests for policy engine",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 143,
-    "name": "Feature 143",
+    "name": "Unit tests for memory store",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 144,
-    "name": "Feature 144",
+    "name": "Integration tests for full run lifecycle",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 145,
-    "name": "Feature 145",
+    "name": "Integration tests for approval workflow",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 146,
-    "name": "Feature 146",
+    "name": "Test coverage > 80% for core modules",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 147,
-    "name": "Feature 147",
+    "name": "API documentation (OpenAPI)",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 148,
-    "name": "Feature 148",
+    "name": "Architecture decision records",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 149,
-    "name": "Feature 149",
+    "name": "Runbook for common operations",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 150,
-    "name": "Feature 150",
+    "name": "Contributing guide",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 151,
-    "name": "Feature 151",
+    "name": "Risk tier YAML configuration",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 152,
-    "name": "Feature 152",
+    "name": "Budget policy YAML configuration",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 153,
-    "name": "Feature 153",
+    "name": "Memory write policy YAML configuration",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 154,
-    "name": "Feature 154",
+    "name": "Approval matrix YAML configuration",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 155,
-    "name": "Feature 155",
+    "name": "Run replay from checkpoint",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 156,
-    "name": "Feature 156",
+    "name": "Checkpoint diff visualization",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 157,
-    "name": "Feature 157",
+    "name": "Run timeline visualization",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 158,
-    "name": "Feature 158",
+    "name": "Cost breakdown by node",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 159,
-    "name": "Feature 159",
+    "name": "Memory browser UI",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 160,
-    "name": "Feature 160",
+    "name": "Reflection feed UI",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 161,
-    "name": "Feature 161",
+    "name": "Governance matrix UI",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 162,
-    "name": "Feature 162",
+    "name": "Incident response console UI",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 163,
-    "name": "Feature 163",
+    "name": "Fleet orchestration board UI",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 164,
-    "name": "Feature 164",
+    "name": "Real-time run status updates (WebSocket)",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 165,
-    "name": "Feature 165",
+    "name": "Run comparison view",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 166,
-    "name": "Feature 166",
+    "name": "Export run data (JSON/CSV)",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 167,
-    "name": "Feature 167",
+    "name": "Bulk run operations",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 168,
-    "name": "Feature 168",
+    "name": "Run scheduling (cron-like)",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 169,
-    "name": "Feature 169",
+    "name": "Run templates",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 170,
-    "name": "Feature 170",
+    "name": "Multi-tenant workspace isolation",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 171,
-    "name": "Feature 171",
+    "name": "Tenant-level budget quotas",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 172,
-    "name": "Feature 172",
+    "name": "Usage analytics per tenant",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 173,
-    "name": "Feature 173",
+    "name": "Custom hook plugins",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 174,
-    "name": "Feature 174",
+    "name": "Webhook notifications for events",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 175,
-    "name": "Feature 175",
+    "name": "Email notifications for escalations",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 176,
-    "name": "Feature 176",
+    "name": "Slack integration for approvals",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 177,
-    "name": "Feature 177",
+    "name": "Run audit log export",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 178,
-    "name": "Feature 178",
+    "name": "Compliance report generation",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 179,
-    "name": "Feature 179",
+    "name": "Data retention policies",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 180,
-    "name": "Feature 180",
+    "name": "GDPR data deletion support",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 181,
-    "name": "Feature 181",
+    "name": "Rate limiting per tenant",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 182,
-    "name": "Feature 182",
+    "name": "Request queuing for high load",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 183,
-    "name": "Feature 183",
+    "name": "Health check with dependency status",
+    "milestone": 0,
     "passes": false
   },
   {
     "id": 184,
-    "name": "Feature 184",
+    "name": "Graceful shutdown handling",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 185,
-    "name": "Feature 185",
+    "name": "Circuit breaker for external services",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 186,
-    "name": "Feature 186",
+    "name": "Retry logic with exponential backoff",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 187,
-    "name": "Feature 187",
+    "name": "Dead letter queue for failed tasks",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 188,
-    "name": "Feature 188",
+    "name": "Metrics export to Prometheus",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 189,
-    "name": "Feature 189",
+    "name": "Structured logging (JSON)",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 190,
-    "name": "Feature 190",
+    "name": "Log aggregation integration",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 191,
-    "name": "Feature 191",
+    "name": "Distributed tracing (OpenTelemetry)",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 192,
-    "name": "Feature 192",
+    "name": "Feature flags for gradual rollout",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 193,
-    "name": "Feature 193",
+    "name": "A/B testing framework for prompts",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 194,
-    "name": "Feature 194",
+    "name": "Prompt version management",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 195,
-    "name": "Feature 195",
+    "name": "Model fallback (provider down)",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 196,
-    "name": "Feature 196",
+    "name": "Token budget per LLM call",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 197,
-    "name": "Feature 197",
+    "name": "Response validation (schema check)",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 198,
-    "name": "Feature 198",
+    "name": "Hallucination detection hints",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 199,
-    "name": "Feature 199",
+    "name": "Fact-checking against memory",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 200,
-    "name": "Feature 200",
+    "name": "Conflict resolution for memory writes",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 201,
-    "name": "Feature 201",
+    "name": "Memory consolidation (old → summary)",
+    "milestone": 3,
     "passes": false
   },
   {
     "id": 202,
-    "name": "Feature 202",
+    "name": "Context window management",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 203,
-    "name": "Feature 203",
+    "name": "State serialization/deserialization",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 204,
-    "name": "Feature 204",
+    "name": "Graph visualization export",
+    "milestone": 4,
     "passes": false
   },
   {
     "id": 205,
-    "name": "Feature 205",
+    "name": "Run replay with modified state",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 206,
-    "name": "Feature 206",
+    "name": "What-if analysis for runs",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 207,
-    "name": "Feature 207",
+    "name": "Cost prediction before run",
+    "milestone": 5,
     "passes": false
   },
   {
     "id": 208,
-    "name": "Feature 208",
+    "name": "Budget alerting (80% threshold)",
+    "milestone": 2,
     "passes": false
   },
   {
     "id": 209,
-    "name": "Feature 209",
+    "name": "Automatic retry for transient errors",
+    "milestone": 1,
     "passes": false
   },
   {
     "id": 210,
-    "name": "Feature 210",
+    "name": "Run cancellation API",
+    "milestone": 1,
     "passes": false
   }
 ]
