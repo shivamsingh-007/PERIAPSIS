@@ -1,0 +1,111 @@
+# Memory Write Policy Configuration
+# Controls how memories are written, deduplicated, and promoted
+
+version: "1.0"
+description: "Memory write policy for Agentic Loop Platform"
+
+# Write policies by memory type
+policies:
+  lesson:
+    require_source_ref: true
+    min_confidence: 0.6
+    max_confidence: 0.95
+    ttl_days: 365
+    dedup_strategy: "content_hash"
+    promote_requires_approval: true
+    auto_expire_after_days: 730
+
+  episodic:
+    require_source_ref: true
+    min_confidence: 0.3
+    max_confidence: 0.8
+    ttl_days: 90
+    dedup_strategy: "content_hash"
+    promote_requires_approval: false
+    auto_expire_after_days: 180
+
+  semantic:
+    require_source_ref: false
+    min_confidence: 0.7
+    max_confidence: 1.0
+    ttl_days: 1825
+    dedup_strategy: "embedding_similarity"
+    promote_requires_approval: false
+    auto_expire_after_days: 3650
+
+  summary:
+    require_source_ref: false
+    min_confidence: 0.5
+    max_confidence: 0.9
+    ttl_days: 365
+    dedup_strategy: "content_hash"
+    promote_requires_approval: false
+    auto_expire_after_days: 730
+
+# Deduplication settings
+deduplication:
+  content_hash_algorithm: "sha256"
+  embedding_similarity_threshold: 0.92
+  max_duplicate_confidence_boost: 0.1
+  enable_clustering_dedup: true
+  clustering_algorithm: "kmeans"
+  clustering_n_clusters: 10
+
+# Graph linking settings
+graph_linking:
+  enabled: true
+  auto_link_on_write: true
+  min_relevance_for_link: 0.5
+  max_links_per_memory: 10
+  link_concepts_on_promote: true
+
+# Conflict resolution
+conflict_resolution:
+  strategy: "confidence_wins"
+  available_strategies:
+    - "latest_wins"
+    - "confidence_wins"
+    - "merge"
+    - "archive"
+    - "human_decides"
+  auto_resolve_below_confidence: 0.4
+  require_human_above_confidence: 0.8
+
+# Consolidation settings
+consolidation:
+  enabled: true
+  trigger_threshold: 100
+  batch_size: 50
+  summary_max_tokens: 500
+  keep_original_after_consolidation: false
+
+# Filtering rules
+filtering:
+  block_patterns:
+    - "password.*=.*"
+    - "secret.*=.*"
+    - "api_key.*=.*"
+    - "token.*=.*"
+  require_attribution: true
+  min_content_length: 10
+  max_content_length: 10000
+  strip_pii: true
+
+# Promotion rules
+promotion:
+  min_confidence: 0.7
+  min_occurrences: 3
+  min_age_days: 7
+  require_human_approval: true
+  auto_approve_below_risk: "low"
+  simulation_required: true
+  simulation_min_pass_rate: 0.8
+
+# Monitoring
+monitoring:
+  log_writes: true
+  log_dedup_hits: true
+  log_promotions: true
+  metrics_enabled: true
+  alert_on_high_dedup_rate: true
+  high_dedup_rate_threshold: 0.5

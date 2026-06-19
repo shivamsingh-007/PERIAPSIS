@@ -854,8 +854,8 @@
   {
     "id": 143,
     "name": "Unit tests for memory store",
-    "milestone": 3,
-    "passes": false
+    "milestone": 5,
+    "passes": true
   },
   {
     "id": 144,
@@ -872,32 +872,32 @@
   {
     "id": 146,
     "name": "Test coverage > 80% for core modules",
-    "milestone": 2,
-    "passes": false
+    "milestone": 5,
+    "passes": true
   },
   {
     "id": 147,
     "name": "API documentation (OpenAPI)",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 148,
     "name": "Architecture decision records",
-    "milestone": 0,
-    "passes": false
+    "milestone": 5,
+    "passes": true
   },
   {
     "id": 149,
     "name": "Runbook for common operations",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 150,
     "name": "Contributing guide",
-    "milestone": 0,
-    "passes": false
+    "milestone": 5,
+    "passes": true
   },
   {
     "id": 151,
@@ -914,8 +914,8 @@
   {
     "id": 153,
     "name": "Memory write policy YAML configuration",
-    "milestone": 3,
-    "passes": false
+    "milestone": 5,
+    "passes": true
   },
   {
     "id": 154,
@@ -932,8 +932,8 @@
   {
     "id": 156,
     "name": "Checkpoint diff visualization",
-    "milestone": 1,
-    "passes": false
+    "milestone": 5,
+    "passes": true
   },
   {
     "id": 157,
@@ -975,7 +975,7 @@
     "id": 163,
     "name": "Fleet orchestration board UI",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 164,

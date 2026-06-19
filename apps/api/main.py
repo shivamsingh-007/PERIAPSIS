@@ -53,9 +53,38 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Agentic Loop Platform",
-    description="Production-grade, governance-first, closed-loop agent platform",
+    description=(
+        "Production-grade, governance-first, closed-loop agent platform.\n\n"
+        "## Features\n"
+        "- **Closed-loop execution** with typed state and terminal states\n"
+        "- **Governance engine** with policy checks, approval workflows, and audit trails\n"
+        "- **Memory system** with deduplication, graph linking, and lesson promotion\n"
+        "- **Fleet orchestration** with swarm-based parallel execution\n"
+        "- **Knowledge graph** via Graphify for context-aware planning\n"
+        "- **Resilience** with circuit breakers, rate limiting, and idempotency\n\n"
+        "## Architecture\n"
+        "- LangGraph for state machine execution\n"
+        "- Postgres + pgvector for persistence and embeddings\n"
+        "- Langfuse for tracing and observability\n"
+        "- Next.js for admin dashboard"
+    ),
     version="0.1.0",
     lifespan=lifespan,
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_tags=[
+        {"name": "runs", "description": "Create and manage agent runs"},
+        {"name": "approvals", "description": "Human approval workflows"},
+        {"name": "memory", "description": "Memory store operations"},
+        {"name": "harness", "description": "Evaluation and scoring"},
+        {"name": "graph", "description": "Knowledge graph operations"},
+        {"name": "fleet", "description": "Fleet orchestration"},
+        {"name": "resilience", "description": "Circuit breakers and rate limiting"},
+        {"name": "webhooks", "description": "Webhook management"},
+        {"name": "scheduler", "description": "Run scheduling"},
+        {"name": "export", "description": "Data export"},
+        {"name": "health", "description": "System health checks"},
+    ],
 )
 
 app.add_middleware(TracingMiddleware)
