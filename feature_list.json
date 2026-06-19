@@ -489,7 +489,7 @@
     "id": 82,
     "name": "Row-level security on all tables",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 83,
@@ -807,7 +807,7 @@
     "id": 135,
     "name": "RBAC roles (admin/operator/viewer)",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 136,
@@ -981,7 +981,7 @@
     "id": 164,
     "name": "Real-time run status updates (WebSocket)",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 165,
@@ -993,7 +993,7 @@
     "id": 166,
     "name": "Export run data (JSON/CSV)",
     "milestone": 4,
-    "passes": false
+    "passes": true
   },
   {
     "id": 167,
@@ -1005,7 +1005,7 @@
     "id": 168,
     "name": "Run scheduling (cron-like)",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 169,
@@ -1041,7 +1041,7 @@
     "id": 174,
     "name": "Webhook notifications for events",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 175,
@@ -1059,7 +1059,7 @@
     "id": 177,
     "name": "Run audit log export",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 178,
@@ -1125,7 +1125,7 @@
     "id": 188,
     "name": "Metrics export to Prometheus",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 189,
@@ -1143,7 +1143,7 @@
     "id": 191,
     "name": "Distributed tracing (OpenTelemetry)",
     "milestone": 5,
-    "passes": false
+    "passes": true
   },
   {
     "id": 192,

@@ -183,3 +183,39 @@ Built:
 
 Status: 139/210 features complete (M5 core done)
 Next: Remaining advanced features (Fleet, Auth, Multi-tenant)
+
+Session 9 - Remaining Backend Features (BUILD)
+==============================================
+Built:
+- WebSocket Support (packages/websocket/):
+  - ConnectionManager: client tracking, topic subscriptions
+  - RunStatusBroadcaster: real-time run/step/approval events
+  - WebSocket API: /ws/{client_id} with subscribe/unsubscribe
+- Row-Level Security (packages/security/rls.py):
+  - Tenant context setting via SET app.current_tenant
+  - TenantIsolator: access check and query filtering
+- RBAC (packages/security/rbac.py):
+  - Roles: admin, operator, viewer
+  - Permission mapping per role
+  - Path-based permission checking middleware
+- Webhooks (packages/notifications/webhooks.py):
+  - Register/delete webhooks per tenant
+  - HMAC signature verification
+  - Delivery with retry and logging
+  - Event types: run.*, approval.*, step.*, policy.*
+- Export (packages/export/run_export.py):
+  - Single run export (JSON/CSV)
+  - Bulk tenant run export
+  - Includes steps, governance events, reflections
+- Run Scheduler (packages/scheduler/scheduler.py):
+  - Schedule types: once, interval, cron
+  - Async scheduler loop with due check
+  - CRUD for schedules
+- New API Routes:
+  - /export/runs/{id}, /export/runs/bulk/{tenant_id}
+  - /webhooks/ (CRUD + deliveries)
+  - /schedules/ (CRUD + start/stop)
+  - /ws/{client_id} (WebSocket)
+
+Status: 148/210 features complete (70%)
+Next: Remaining features are UI/frontend (Next.js)

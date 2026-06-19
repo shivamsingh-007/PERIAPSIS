@@ -12,12 +12,18 @@ from packages.logging.structured import setup_structured_logging, get_logger
 from packages.middleware.idempotency import IdempotencyMiddleware
 from packages.middleware.rate_limit import RateLimitMiddleware
 from packages.middleware.shutdown import graceful_shutdown_lifespan
+from packages.security.rls import RowLevelSecurityMiddleware
+from packages.security.rbac import RBACMiddleware
 
 from .middleware.tracing import TracingMiddleware, setup_langfuse
 from .routes.approvals import router as approvals_router
+from .routes.export import router as export_router
 from .routes.harness import router as harness_router
 from .routes.memory import router as memory_router
 from .routes.runs import router as runs_router
+from .routes.scheduler_api import router as scheduler_router
+from .routes.webhook_api import router as webhook_router
+from .routes.websocket import router as ws_router
 
 logger = get_logger("api")
 
@@ -52,10 +58,17 @@ app = FastAPI(
 app.add_middleware(TracingMiddleware)
 app.add_middleware(IdempotencyMiddleware)
 app.add_middleware(RateLimitMiddleware)
+app.add_middleware(RowLevelSecurityMiddleware)
+app.add_middleware(RBACMiddleware)
+
 app.include_router(runs_router)
 app.include_router(approvals_router)
 app.include_router(memory_router)
 app.include_router(harness_router)
+app.include_router(export_router)
+app.include_router(webhook_router)
+app.include_router(scheduler_router)
+app.include_router(ws_router)
 
 
 @app.get("/health", response_model=HealthResponse)
