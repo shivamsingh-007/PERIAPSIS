@@ -213,61 +213,61 @@
     "id": 36,
     "name": "PolicyEngine class",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 37,
     "name": "Risk tier evaluation",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 38,
     "name": "Approval workflow - low risk (auto-approve)",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 39,
     "name": "Approval workflow - medium risk (human required)",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 40,
     "name": "Approval workflow - high risk (secondary review)",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 41,
     "name": "Validation gate node in graph",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 42,
     "name": "Governance event logging",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 43,
     "name": "Approval API endpoints",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 44,
     "name": "Policy versioning",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 45,
     "name": "Policy YAML parsing",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 46,
@@ -543,73 +543,73 @@
     "id": 91,
     "name": "Search connector",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 92,
     "name": "Docs connector",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 93,
     "name": "Internal-read connector",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 94,
     "name": "Ticketing connector",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 95,
     "name": "before_run_start hook",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 96,
     "name": "after_run_start hook",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 97,
     "name": "before_plan hook",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 98,
     "name": "after_plan hook",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 99,
     "name": "before_tool_call hook",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 100,
     "name": "after_tool_call hook",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 101,
     "name": "before_checkpoint hook",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 102,
     "name": "after_checkpoint hook",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 103,
@@ -651,19 +651,19 @@
     "id": 109,
     "name": "Rule: agent cannot redefine goal",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 110,
     "name": "Rule: agent cannot exceed budget caps",
     "milestone": 1,
-    "passes": false
+    "passes": true
   },
   {
     "id": 111,
     "name": "Rule: restricted writes require approval",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 112,
@@ -675,7 +675,7 @@
     "id": 113,
     "name": "Rule: checker != maker",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 114,
@@ -819,7 +819,7 @@
     "id": 137,
     "name": "Least-privilege connector execution",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 138,
@@ -849,7 +849,7 @@
     "id": 142,
     "name": "Unit tests for policy engine",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 143,
@@ -861,13 +861,13 @@
     "id": 144,
     "name": "Integration tests for full run lifecycle",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 145,
     "name": "Integration tests for approval workflow",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 146,
@@ -903,7 +903,7 @@
     "id": 151,
     "name": "Risk tier YAML configuration",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 152,
@@ -921,7 +921,7 @@
     "id": 154,
     "name": "Approval matrix YAML configuration",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 155,
@@ -1245,7 +1245,7 @@
     "id": 208,
     "name": "Budget alerting (80% threshold)",
     "milestone": 2,
-    "passes": false
+    "passes": true
   },
   {
     "id": 209,

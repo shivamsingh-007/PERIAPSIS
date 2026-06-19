@@ -10,6 +10,7 @@ from sqlalchemy import text
 from packages.schemas.database import get_engine, init_engine
 
 from .middleware.tracing import TracingMiddleware, setup_langfuse
+from .routes.approvals import router as approvals_router
 from .routes.runs import router as runs_router
 
 
@@ -39,6 +40,7 @@ app = FastAPI(
 
 app.add_middleware(TracingMiddleware)
 app.include_router(runs_router)
+app.include_router(approvals_router)
 
 
 @app.get("/health", response_model=HealthResponse)

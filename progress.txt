@@ -35,29 +35,35 @@ Status: 16/210 features complete (Milestone 0 done)
 Session 4 - Milestone 1: Core Runtime (BUILD)
 ==============================================
 Built:
-- CheckpointStore (packages/runtime/checkpoint.py):
-  - save(): persist state to Postgres with checkpoint_ref
-  - load(): restore latest state from Postgres
-  - diff(): compare two checkpoints
-- Run CRUD API (apps/api/routes/runs.py):
-  - POST /runs — create run
-  - GET /runs/{run_id} — get run
-  - GET /runs — list runs with filtering
-  - PATCH /runs/{run_id} — update run status
-  - POST /runs/execute — create + execute run end-to-end
-- Updated graph nodes (packages/runtime/graph.py):
-  - intake: risk tier classification
-  - policy_check: budget enforcement
-  - plan: generates action plan
-  - execute: runs actions, tracks cost/tokens
-  - validate: checks invariants
-  - checkpoint: persists state via CheckpointStore
-  - reflect: tracks progress
-  - decide: terminal state determination
-- RunService (packages/runtime/service.py):
-  - Orchestrates graph execution
-  - Updates run status in database
-  - Handles errors and terminal states
+- CheckpointStore (packages/runtime/checkpoint.py)
+- Run CRUD API (apps/api/routes/runs.py)
+- Updated graph nodes to do real work
+- RunService (packages/runtime/service.py)
 
 Status: 56/210 features complete (Milestone 1 done)
-Next: Milestone 2 - Governance & Validation
+
+Session 5 - Milestone 2: Governance & Validation (BUILD)
+=========================================================
+Built:
+- PolicyEngine (packages/governance/policy.py):
+  - Risk tier configs (low/medium/high)
+  - Tool policies with allowed tiers
+  - evaluate_action() → ALLOW/DENY/REQUIRE_APPROVAL/REQUIRE_SECONDARY_REVIEW
+  - should_escalate() and is_denied() helpers
+- GovernanceEventLogger (packages/governance/events.py):
+  - log() — generic event logging
+  - log_approval_requested/granted/denied()
+  - log_policy_violation()
+  - get_events_for_run() — audit trail
+- Updated graph (packages/runtime/graph.py):
+  - Added validation_gate node between plan and execute
+  - Policy evaluation before every action
+  - Escalation to human for medium/high risk
+- Approval API (apps/api/routes/approvals.py):
+  - GET /approvals/pending — list pending approvals
+  - POST /approvals/{id}/approve — approve action
+  - POST /approvals/{id}/deny — deny action
+  - GET /approvals/events/{run_id} — governance event audit trail
+
+Status: 89/210 features complete (Milestone 2 done)
+Next: Milestone 3 - Memory & Reflection

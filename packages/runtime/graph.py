@@ -6,6 +6,8 @@ from typing import Literal
 
 from langgraph.graph import END, StateGraph
 
+from packages.governance.events import governance_event_logger
+from packages.governance.policy import PolicyDecision, policy_engine
 from packages.runtime.checkpoint import checkpoint_store
 from packages.runtime.state import (
     Action,
@@ -48,6 +50,81 @@ def plan(state: RunState) -> dict:
         Action(action_type="execute", tool_name="default", input_data={"goal": state.goal}),
     ]
     return {"plan": actions}
+
+
+def validation_gate(state: RunState) -> dict:
+    """Check action eligibility against governance policies before execution."""
+    if not state.plan:
+        return {}
+
+    action = state.plan[0]
+    decision = policy_engine.evaluate_action(
+        action_type=action.action_type,
+        tool_name=action.tool_name,
+        risk_tier=state.risk_tier.value if hasattr(state.risk_tier, 'value') else state.risk_tier,
+        current_cost=state.total_cost_usd,
+        current_iterations=state.iterations,
+    )
+
+    if policy_engine.is_denied(decision):
+        return {
+            "terminal_state": TerminalState.STOP_POLICY,
+            "status": RunStatus.COMPLETED,
+        }
+
+    if policy_engine.should_escalate(decision):
+        return {
+            "terminal_state": TerminalState.ESCALATED_TO_HUMAN,
+            "status": RunStatus.PAUSED,
+        }
+
+    return {}
+
+
+async def validation_gate_async(state: RunState) -> dict:
+    """Async validation gate that also logs governance events."""
+    if not state.plan:
+        return {}
+
+    action = state.plan[0]
+    decision = policy_engine.evaluate_action(
+        action_type=action.action_type,
+        tool_name=action.tool_name,
+        risk_tier=state.risk_tier.value if hasattr(state.risk_tier, 'value') else state.risk_tier,
+        current_cost=state.total_cost_usd,
+        current_iterations=state.iterations,
+    )
+
+    if policy_engine.is_denied(decision):
+        await governance_event_logger.log_policy_violation(
+            run_id=state.run_id,
+            tenant_id=state.tenant_id,
+            policy_rule=f"action_denied:{action.action_type}",
+            details={
+                "tool_name": action.tool_name,
+                "risk_tier": state.risk_tier.value if hasattr(state.risk_tier, 'value') else state.risk_tier,
+                "decision": decision.value,
+            },
+        )
+        return {
+            "terminal_state": TerminalState.STOP_POLICY,
+            "status": RunStatus.COMPLETED,
+        }
+
+    if policy_engine.should_escalate(decision):
+        await governance_event_logger.log_approval_requested(
+            run_id=state.run_id,
+            tenant_id=state.tenant_id,
+            action_type=action.action_type,
+            tool_name=action.tool_name,
+            risk_tier=state.risk_tier.value if hasattr(state.risk_tier, 'value') else state.risk_tier,
+        )
+        return {
+            "terminal_state": TerminalState.ESCALATED_TO_HUMAN,
+            "status": RunStatus.PAUSED,
+        }
+
+    return {}
 
 
 def execute(state: RunState) -> dict:
@@ -144,6 +221,7 @@ def build_main_graph() -> StateGraph:
     graph.add_node("intake", intake)
     graph.add_node("policy_check", policy_check)
     graph.add_node("plan", plan)
+    graph.add_node("validation_gate", validation_gate)
     graph.add_node("execute", execute)
     graph.add_node("validate", validate)
     graph.add_node("checkpoint", checkpoint_node)
@@ -161,7 +239,16 @@ def build_main_graph() -> StateGraph:
             "stop": END,
         },
     )
-    graph.add_edge("plan", "execute")
+    graph.add_edge("plan", "validation_gate")
+    graph.add_conditional_edges(
+        "validation_gate",
+        should_continue,
+        {
+            "continue": "execute",
+            "escalate": END,
+            "stop": END,
+        },
+    )
     graph.add_edge("execute", "validate")
     graph.add_edge("validate", "checkpoint")
     graph.add_edge("checkpoint", "reflect")
