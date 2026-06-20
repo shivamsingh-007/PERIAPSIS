@@ -12,10 +12,42 @@ from packages.logging.structured import get_logger
 logger = get_logger("fleet_node")
 
 
-async def fleet_dispatch(state: RunState) -> RunState:
-    goal = state.get("goal", "")
-    risk_tier_str = state.get("risk_tier", "low")
-    budget_limit = state.get("budget_limit", 10.0)
+def _get_state_field(state: Any, field: str, default: Any = None) -> Any:
+    """Safely get a field from either a RunState Pydantic model or a dict."""
+    if isinstance(state, RunState):
+        return getattr(state, field, default)
+    if isinstance(state, dict):
+        return state.get(field, default)
+    return getattr(state, field, default)
+
+
+def _get_steps(state: Any) -> list:
+    """Get steps from state, handling both RunState and dict."""
+    if isinstance(state, RunState):
+        return list(state.steps)
+    if isinstance(state, dict):
+        return list(state.get("steps", []))
+    return []
+
+
+def _get_goal(state: Any) -> str:
+    return _get_state_field(state, "goal", "")
+
+
+def _get_risk_tier_str(state: Any) -> str:
+    val = _get_state_field(state, "risk_tier", "low")
+    if hasattr(val, "value"):
+        return val.value
+    return str(val)
+
+
+async def fleet_dispatch(state: Any) -> dict:
+    """Dispatch work to fleet. Accepts RunState or dict for backwards compatibility."""
+    goal = _get_goal(state)
+    risk_tier_str = _get_risk_tier_str(state)
+
+    budget = _get_state_field(state, "budget", None)
+    budget_limit = budget.max_cost_usd if budget and hasattr(budget, "max_cost_usd") else 10.0
 
     risk_tier = RiskTier(risk_tier_str) if risk_tier_str in RiskTier.__members__.values() else RiskTier.LOW
 
@@ -30,52 +62,25 @@ async def fleet_dispatch(state: RunState) -> RunState:
 
     if job.state == FleetJobState.BLOCKED:
         return {
-            **state,
-            "terminal": TerminalState.ESCALATED_TO_HUMAN,
-            "terminal_reason": f"Fleet blocked: {job.error}",
-            "steps": state.get("steps", []) + [
-                StepResult(
-                    action=Action(type="fleet_dispatch", detail=f"Blocked: {job.error}"),
-                    observation=f"Compliance gate blocked fleet job: {job.error}",
-                    success=False,
-                ).model_dump()
-            ],
+            "terminal_state": TerminalState.ESCALATED_TO_HUMAN,
+            "status": "paused",
         }
 
     completed_job = await fleet_coordinator.execute_job(job.job_id)
-
-    steps = state.get("steps", [])
-    for sub_result in completed_job.sub_jobs:
-        steps.append(
-            StepResult(
-                action=Action(
-                    type="fleet_worker",
-                    detail=f"Worker {sub_result.worker_id}",
-                ),
-                observation=str(sub_result.output)[:500] if sub_result.output else sub_result.error,
-                success=sub_result.status.value == "completed",
-            ).model_dump()
-        )
 
     total_cost = sum(r.cost for r in completed_job.sub_jobs)
     outputs = [r.output for r in completed_job.sub_jobs if r.output]
 
     if completed_job.state == FleetJobState.COMPLETED:
         return {
-            **state,
-            "final_output": outputs[-1] if outputs else None,
-            "total_cost": state.get("total_cost", 0) + total_cost,
-            "total_steps": state.get("total_steps", 0) + len(completed_job.sub_jobs),
-            "steps": steps,
+            "last_output": outputs[-1] if outputs else "",
+            "total_cost_usd": _get_state_field(state, "total_cost_usd", 0) + total_cost,
         }
     else:
         return {
-            **state,
-            "terminal": TerminalState.FAIL_TOOLING,
-            "terminal_reason": f"Fleet job failed: {completed_job.error}",
-            "total_cost": state.get("total_cost", 0) + total_cost,
-            "total_steps": state.get("total_steps", 0) + len(completed_job.sub_jobs),
-            "steps": steps,
+            "terminal_state": TerminalState.FAIL_TOOLING,
+            "status": "completed",
+            "total_cost_usd": _get_state_field(state, "total_cost_usd", 0) + total_cost,
         }
 
 
@@ -106,22 +111,25 @@ def _select_swarm(goal: str, risk_tier: RiskTier) -> str:
         return "code-swarm"
 
 
-async def fleet_reflect(state: RunState) -> RunState:
-    steps = state.get("steps", [])
+async def fleet_reflect(state: Any) -> dict:
+    """Reflect on fleet execution results."""
+    steps = _get_steps(state)
     if not steps:
-        return state
+        return {}
 
     last_step = steps[-1]
-    success = last_step.get("success", False)
+    if isinstance(last_step, dict):
+        success = last_step.get("success", False)
+    elif hasattr(last_step, "output"):
+        success = last_step.output.get("success", False) if isinstance(last_step.output, dict) else False
+    else:
+        success = False
 
     if not success:
+        consecutive_errors = _get_state_field(state, "consecutive_errors", 0) + 1
         return {
-            **state,
-            "consecutive_errors": state.get("consecutive_errors", 0) + 1,
-            "should_compact": state.get("consecutive_errors", 0) >= 3,
+            "consecutive_errors": consecutive_errors,
+            "should_compact": consecutive_errors >= 3,
         }
 
-    return {
-        **state,
-        "consecutive_errors": 0,
-    }
+    return {"consecutive_errors": 0}

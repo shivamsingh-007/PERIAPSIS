@@ -11,6 +11,8 @@ from packages.governance.policy import PolicyDecision, policy_engine
 from packages.graphify.context_assembler import context_assembler
 from packages.graphify.impact_tracer import impact_tracer
 from packages.runtime.checkpoint import checkpoint_store
+from packages.runtime.executor import Executor, ToolExecutionResult
+from packages.runtime.llm_executor import LLMExecutor, estimate_cost
 from packages.runtime.state import (
     Action,
     RunState,
@@ -148,33 +150,45 @@ async def validation_gate_async(state: RunState) -> dict:
     return {}
 
 
-def execute(state: RunState) -> dict:
-    """Run the current action from the plan."""
+async def execute(state: RunState, executor: Executor | None = None) -> dict:
+    """Run the current action from the plan using a real LLM executor."""
     if not state.plan:
         return {"terminal_state": TerminalState.FAIL_TOOLING, "status": RunStatus.COMPLETED}
 
     step_number = state.current_step
     action = state.plan[0] if state.plan else None
 
+    if executor is None:
+        executor = LLMExecutor()
+
     start = time.time()
-    output = {"result": f"Executed: {action.action_type if action else 'none'}", "success": True}
+    result: ToolExecutionResult = await executor.execute(state)
     latency_ms = int((time.time() - start) * 1000)
+
+    if result.error:
+        return {
+            "terminal_state": TerminalState.FAIL_TOOLING,
+            "status": RunStatus.COMPLETED,
+        }
 
     step = StepResult(
         step_number=step_number,
         node_name="execute",
         action=action,
-        output=output,
+        output={"result": result.output, "success": True},
         latency_ms=latency_ms,
-        cost_tokens_in=100,
-        cost_tokens_out=50,
-        cost_usd=0.001,
+        cost_tokens_in=result.prompt_tokens,
+        cost_tokens_out=result.completion_tokens,
+        cost_usd=result.cost_usd,
     )
 
     return {
         "steps": state.steps + [step],
         "tool_calls": state.tool_calls + 1,
-        "total_cost_usd": state.total_cost_usd + step.cost_usd,
+        "total_cost_usd": state.total_cost_usd + result.cost_usd,
+        "tokens_prompt": state.tokens_prompt + result.prompt_tokens,
+        "tokens_completion": state.tokens_completion + result.completion_tokens,
+        "last_output": result.output,
     }
 
 
@@ -223,9 +237,10 @@ def reflect(state: RunState) -> dict:
     except Exception:
         pass
 
+    result_text = last_step.output.get("result", "")
     return {
         "no_progress_rounds": state.no_progress_rounds + 1
-        if last_step.output.get("result", "") == ""
+        if not result_text
         else state.no_progress_rounds,
         "graph_critique": critique,
     }

@@ -8,6 +8,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
+from packages.runtime.executor import ToolExecutionResult
 from packages.runtime.graph import (
     build_main_graph,
     checkpoint_node,
@@ -30,6 +31,22 @@ from packages.runtime.state import (
     StepResult,
     TerminalState,
 )
+
+
+class MockExecutor:
+    """Mock executor for integration tests."""
+
+    def __init__(self, output: str = "Mock output", cost_usd: float = 0.001):
+        self.output = output
+        self.cost_usd = cost_usd
+
+    async def execute(self, state: RunState) -> ToolExecutionResult:
+        return ToolExecutionResult(
+            output=self.output,
+            prompt_tokens=100,
+            completion_tokens=50,
+            cost_usd=self.cost_usd,
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -310,47 +327,53 @@ class TestValidationGateAsync:
 # ---------------------------------------------------------------------------
 
 class TestExecuteNode:
-    def test_execute_empty_plan_returns_fail_tooling(self):
+    @pytest.mark.asyncio
+    async def test_execute_empty_plan_returns_fail_tooling(self):
         state = _make_state()
-        result = execute(state)
+        result = await execute(state)
         assert result["terminal_state"] == TerminalState.FAIL_TOOLING
         assert result["status"] == RunStatus.COMPLETED
 
-    def test_execute_runs_action(self):
+    @pytest.mark.asyncio
+    async def test_execute_runs_action(self):
         action = Action(action_type="research", tool_name="search", input_data={})
         state = _make_state(goal="list users", plan=[action])
         state.current_step = 1
-        result = execute(state)
+        result = await execute(state, executor=MockExecutor())
         assert "steps" in result
         assert len(result["steps"]) == 1
         assert result["steps"][0].output["success"] is True
 
-    def test_execute_increments_tool_calls(self):
+    @pytest.mark.asyncio
+    async def test_execute_increments_tool_calls(self):
         action = Action(action_type="research", tool_name="search", input_data={})
         state = _make_state(goal="list users", plan=[action], tool_calls=3)
         state.current_step = 1
-        result = execute(state)
+        result = await execute(state, executor=MockExecutor())
         assert result["tool_calls"] == 4
 
-    def test_execute_adds_cost(self):
+    @pytest.mark.asyncio
+    async def test_execute_adds_cost(self):
         action = Action(action_type="research", tool_name="search", input_data={})
         state = _make_state(goal="list users", plan=[action], total_cost_usd=0.01)
         state.current_step = 1
-        result = execute(state)
-        assert result["total_cost_usd"] == pytest.approx(0.011, abs=1e-6)
+        result = await execute(state, executor=MockExecutor(cost_usd=0.005))
+        assert result["total_cost_usd"] == pytest.approx(0.015, abs=1e-6)
 
-    def test_execute_step_has_latency(self):
+    @pytest.mark.asyncio
+    async def test_execute_step_has_latency(self):
         action = Action(action_type="research", tool_name="search", input_data={})
         state = _make_state(goal="list users", plan=[action])
         state.current_step = 1
-        result = execute(state)
+        result = await execute(state, executor=MockExecutor())
         assert result["steps"][0].latency_ms >= 0
 
-    def test_execute_step_records_action_type(self):
+    @pytest.mark.asyncio
+    async def test_execute_step_records_action_type(self):
         action = Action(action_type="deploy", tool_name="deployer", input_data={})
         state = _make_state(goal="deploy", plan=[action])
         state.current_step = 1
-        result = execute(state)
+        result = await execute(state, executor=MockExecutor())
         assert result["steps"][0].action.action_type == "deploy"
 
 

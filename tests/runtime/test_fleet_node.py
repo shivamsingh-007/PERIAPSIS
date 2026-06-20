@@ -10,20 +10,6 @@ from packages.runtime.fleet_node import (
 )
 
 
-@pytest.fixture
-def base_state():
-    return {
-        "goal": "Refactor authentication module",
-        "risk_tier": "low",
-        "budget_limit": 5.0,
-        "tenant_id": str(uuid.uuid4()),
-        "steps": [],
-        "total_cost": 0.0,
-        "total_steps": 0,
-        "consecutive_errors": 0,
-    }
-
-
 class TestSelectSwarm:
     def test_security_keyword(self):
         result = _select_swarm("Fix security vulnerability", "low")
@@ -48,32 +34,36 @@ class TestSelectSwarm:
 
 class TestFleetReflect:
     @pytest.mark.asyncio
-    async def test_no_steps(self, base_state):
-        result = await fleet_reflect(base_state)
-        assert result == base_state
+    async def test_no_steps(self):
+        state = {"goal": "test", "steps": []}
+        result = await fleet_reflect(state)
+        assert result == {}
 
     @pytest.mark.asyncio
-    async def test_successful_step(self, base_state):
-        base_state["steps"] = [
-            {"success": True, "action_type": "fleet_worker", "detail": "worker-1"}
-        ]
-        result = await fleet_reflect(base_state)
+    async def test_successful_step(self):
+        state = {
+            "goal": "test",
+            "steps": [{"success": True, "action_type": "fleet_worker", "detail": "worker-1"}],
+        }
+        result = await fleet_reflect(state)
         assert result["consecutive_errors"] == 0
 
     @pytest.mark.asyncio
-    async def test_failed_step_increments_errors(self, base_state):
-        base_state["steps"] = [
-            {"success": False, "action_type": "fleet_worker", "detail": "worker-1"}
-        ]
-        result = await fleet_reflect(base_state)
+    async def test_failed_step_increments_errors(self):
+        state = {
+            "goal": "test",
+            "steps": [{"success": False, "action_type": "fleet_worker", "detail": "worker-1"}],
+        }
+        result = await fleet_reflect(state)
         assert result["consecutive_errors"] == 1
 
     @pytest.mark.asyncio
-    async def test_multiple_failures_triggers_compact(self, base_state):
-        base_state["consecutive_errors"] = 3
-        base_state["steps"] = [
-            {"success": False, "action_type": "fleet_worker", "detail": "w"}
-        ]
-        result = await fleet_reflect(base_state)
+    async def test_multiple_failures_triggers_compact(self):
+        state = {
+            "goal": "test",
+            "consecutive_errors": 3,
+            "steps": [{"success": False, "action_type": "fleet_worker", "detail": "w"}],
+        }
+        result = await fleet_reflect(state)
         assert result["consecutive_errors"] == 4
         assert result["should_compact"] is True

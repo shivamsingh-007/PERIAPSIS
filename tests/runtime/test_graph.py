@@ -5,6 +5,7 @@ import uuid
 
 import pytest
 
+from packages.runtime.executor import ToolExecutionResult
 from packages.runtime.state import (
     Action,
     BudgetPolicy,
@@ -35,6 +36,33 @@ def _make_state(**kwargs) -> RunState:
     }
     defaults.update(kwargs)
     return RunState(**defaults)
+
+
+class MockExecutor:
+    """Mock executor that returns controlled results for testing."""
+
+    def __init__(
+        self,
+        output: str = "Mock LLM response",
+        prompt_tokens: int = 100,
+        completion_tokens: int = 50,
+        cost_usd: float = 0.001,
+        error: str | None = None,
+    ):
+        self.output = output
+        self.prompt_tokens = prompt_tokens
+        self.completion_tokens = completion_tokens
+        self.cost_usd = cost_usd
+        self.error = error
+
+    async def execute(self, state: RunState) -> ToolExecutionResult:
+        return ToolExecutionResult(
+            output=self.output,
+            prompt_tokens=self.prompt_tokens,
+            completion_tokens=self.completion_tokens,
+            cost_usd=self.cost_usd,
+            error=self.error,
+        )
 
 
 class TestIntake:
@@ -129,30 +157,91 @@ class TestPolicyCheck:
 
 
 class TestExecute:
-    def test_execute_with_plan(self):
+    @pytest.mark.asyncio
+    async def test_execute_with_plan(self):
         state = _make_state(
             current_step=1,
             plan=[Action(action_type="research", tool_name="search")],
         )
-        result = execute(state)
+        executor = MockExecutor(output="Research findings", cost_usd=0.002)
+        result = await execute(state, executor=executor)
         assert len(result["steps"]) == 1
         assert result["steps"][0].node_name == "execute"
         assert result["tool_calls"] == 1
-        assert result["total_cost_usd"] > 0
+        assert result["total_cost_usd"] == 0.002
+        assert result["last_output"] == "Research findings"
 
-    def test_execute_empty_plan(self):
+    @pytest.mark.asyncio
+    async def test_execute_empty_plan(self):
         state = _make_state(plan=[])
-        result = execute(state)
+        result = await execute(state)
         assert result["terminal_state"] == TerminalState.FAIL_TOOLING
         assert result["status"] == RunStatus.COMPLETED
 
-    def test_execute_step_number(self):
+    @pytest.mark.asyncio
+    async def test_execute_step_number(self):
         state = _make_state(
             current_step=3,
             plan=[Action(action_type="execute", tool_name="default")],
         )
-        result = execute(state)
+        result = await execute(state, executor=MockExecutor())
         assert result["steps"][0].step_number == 3
+
+    @pytest.mark.asyncio
+    async def test_execute_updates_tokens(self):
+        state = _make_state(
+            plan=[Action(action_type="research", tool_name="search")],
+            tokens_prompt=10,
+            tokens_completion=5,
+        )
+        executor = MockExecutor(prompt_tokens=200, completion_tokens=80)
+        result = await execute(state, executor=executor)
+        assert result["tokens_prompt"] == 210
+        assert result["tokens_completion"] == 85
+
+    @pytest.mark.asyncio
+    async def test_execute_accumulates_cost(self):
+        state = _make_state(
+            plan=[Action(action_type="research", tool_name="search")],
+            total_cost_usd=0.01,
+        )
+        executor = MockExecutor(cost_usd=0.005)
+        result = await execute(state, executor=executor)
+        assert result["total_cost_usd"] == pytest.approx(0.015)
+
+    @pytest.mark.asyncio
+    async def test_execute_executor_error(self):
+        state = _make_state(
+            plan=[Action(action_type="research", tool_name="search")],
+        )
+        executor = MockExecutor(error="API timeout")
+        result = await execute(state, executor=executor)
+        assert result["terminal_state"] == TerminalState.FAIL_TOOLING
+        assert result["status"] == RunStatus.COMPLETED
+
+    @pytest.mark.asyncio
+    async def test_execute_sets_last_output(self):
+        state = _make_state(
+            plan=[Action(action_type="research", tool_name="search")],
+        )
+        executor = MockExecutor(output="Detailed analysis result")
+        result = await execute(state, executor=executor)
+        assert result["last_output"] == "Detailed analysis result"
+
+    @pytest.mark.asyncio
+    async def test_execute_preserves_existing_steps(self):
+        existing_step = StepResult(
+            step_number=1, node_name="plan", output={"result": "planned"}
+        )
+        state = _make_state(
+            current_step=2,
+            plan=[Action(action_type="research", tool_name="search")],
+            steps=[existing_step],
+        )
+        result = await execute(state, executor=MockExecutor())
+        assert len(result["steps"]) == 2
+        assert result["steps"][0].node_name == "plan"
+        assert result["steps"][1].node_name == "execute"
 
 
 class TestValidate:

@@ -76,6 +76,9 @@ class RunState(BaseModel):
     iterations: int = 0
     tool_calls: int = 0
     total_cost_usd: float = 0.0
+    tokens_prompt: int = 0
+    tokens_completion: int = 0
+    last_output: str = ""
     runtime_seconds: float = 0.0
     no_progress_rounds: int = 0
 

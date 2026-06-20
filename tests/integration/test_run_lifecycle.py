@@ -5,6 +5,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
+from packages.runtime.executor import ToolExecutionResult
 from packages.runtime.state import (
     Action,
     BudgetPolicy,
@@ -23,6 +24,22 @@ from packages.runtime.graph import (
     should_continue,
     build_main_graph,
 )
+
+
+class MockExecutor:
+    """Mock executor for lifecycle tests."""
+
+    def __init__(self, output: str = "Mock output", cost_usd: float = 0.001):
+        self.output = output
+        self.cost_usd = cost_usd
+
+    async def execute(self, state: RunState) -> ToolExecutionResult:
+        return ToolExecutionResult(
+            output=self.output,
+            prompt_tokens=100,
+            completion_tokens=50,
+            cost_usd=self.cost_usd,
+        )
 
 
 def _make_state(goal="test goal", tenant_id=None):
@@ -75,29 +92,32 @@ class TestPlanNode:
 
 
 class TestExecuteNode:
-    def test_execute_runs_action(self):
+    @pytest.mark.asyncio
+    async def test_execute_runs_action(self):
         state = _make_state()
         state.plan = [
             Action(action_type="execute", tool_name="default", input_data={"goal": "test"})
         ]
-        result = execute(state)
+        result = await execute(state, executor=MockExecutor())
         assert "steps" in result
         assert len(result["steps"]) == 1
         assert result["steps"][0].output.get("success") is True
 
-    def test_execute_no_plan_fails(self):
+    @pytest.mark.asyncio
+    async def test_execute_no_plan_fails(self):
         state = _make_state()
         state.plan = []
-        result = execute(state)
+        result = await execute(state)
         assert result["terminal_state"] == TerminalState.FAIL_TOOLING
 
-    def test_execute_increments_cost(self):
+    @pytest.mark.asyncio
+    async def test_execute_increments_cost(self):
         state = _make_state()
         state.plan = [
             Action(action_type="execute", tool_name="default", input_data={})
         ]
-        result = execute(state)
-        assert result["total_cost_usd"] > 0
+        result = await execute(state, executor=MockExecutor(cost_usd=0.005))
+        assert result["total_cost_usd"] == 0.005
 
 
 class TestValidateNode:
