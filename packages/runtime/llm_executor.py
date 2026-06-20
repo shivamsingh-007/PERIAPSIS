@@ -91,7 +91,12 @@ class LLMExecutor:
             if not api_key:
                 raise ValueError("LLM_API_KEY or OPENAI_API_KEY environment variable not set")
 
-            client = AsyncOpenAI(api_key=api_key)
+            base_url = os.environ.get("LLM_BASE_URL") or os.environ.get("OPENAI_BASE_URL")
+            client_kwargs: dict = {"api_key": api_key}
+            if base_url:
+                client_kwargs["base_url"] = base_url
+
+            client = AsyncOpenAI(**client_kwargs)
             response = await client.chat.completions.create(
                 model=self.model,
                 messages=messages,  # type: ignore[arg-type]
