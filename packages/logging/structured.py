@@ -94,6 +94,36 @@ class StructuredLogger:
         self.error(f"Error: {error}", **kwargs)
 
 
+_log_buffer: list[dict] = []
+_LOG_BUFFER_MAX = 500
+
+
+class BufferHandler(logging.Handler):
+    """Captures log entries into an in-memory buffer for API retrieval."""
+
+    def emit(self, record: logging.LogRecord):
+        try:
+            entry = {
+                "timestamp": datetime.utcnow().isoformat(),
+                "level": record.levelname,
+                "logger": record.name,
+                "message": record.getMessage(),
+            }
+            for key in ("tenant_id", "run_id", "trace_id"):
+                if hasattr(record, key):
+                    entry[key] = getattr(record, key)
+            _log_buffer.append(entry)
+            if len(_log_buffer) > _LOG_BUFFER_MAX:
+                _log_buffer[:] = _log_buffer[-_LOG_BUFFER_MAX:]
+        except Exception:
+            pass
+
+
+def get_log_buffer(limit: int = 50) -> list[dict]:
+    """Return recent log entries from the in-memory buffer."""
+    return list(_log_buffer[-limit:])
+
+
 def setup_structured_logging(level: int = logging.INFO):
     logging.basicConfig(
         level=level,
@@ -101,6 +131,10 @@ def setup_structured_logging(level: int = logging.INFO):
         handlers=[logging.StreamHandler(sys.stdout)],
     )
     logging.root.handlers[0].setFormatter(JSONFormatter())
+    # Also attach buffer handler
+    buf_handler = BufferHandler()
+    buf_handler.setFormatter(JSONFormatter())
+    logging.root.addHandler(buf_handler)
 
 
 def get_logger(name: str) -> StructuredLogger:

@@ -6,8 +6,8 @@ from datetime import datetime
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
-from sqlalchemy import update
-from sqlalchemy import text
+from sqlalchemy import update, func, text
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from packages.schemas.database import get_session
 from packages.schemas.models import Run
@@ -228,3 +228,76 @@ async def execute_run(req: ExecuteRunRequest):
     )
 
     return ExecuteRunResponse(**result)
+
+
+class MetricsSummary(BaseModel):
+    total_runs: int = 0
+    avg_latency_ms: float = 0.0
+    success_rate: float = 0.0
+    cost_today_usd: float = 0.0
+    status_distribution: list[dict] = []
+    cost_by_day: list[dict] = []
+
+
+@router.get("/metrics/summary", response_model=MetricsSummary)
+async def metrics_summary(tenant_id: uuid.UUID | None = None):
+    """Return aggregated run metrics for the dashboard."""
+    async with get_session() as session:
+        where = ""
+        params: dict = {}
+        if tenant_id:
+            where = "WHERE tenant_id = :tenant_id"
+            params["tenant_id"] = tenant_id
+
+        # Total runs
+        count_result = await session.execute(
+            text(f"SELECT COUNT(*) FROM runs {where}"), params
+        )
+        total_runs = count_result.scalar() or 0
+
+        # Status distribution
+        status_result = await session.execute(
+            text(f"SELECT status, COUNT(*) as cnt FROM runs {where} GROUP BY status"), params
+        )
+        status_rows = status_result.all()
+        status_distribution = [{"name": r[0], "value": r[1]} for r in status_rows]
+
+        # Success rate
+        completed = sum(r[1] for r in status_rows if r[0] in ("completed", "success"))
+        success_rate = completed / total_runs if total_runs > 0 else 0.0
+
+        # Cost from run_steps
+        cost_result = await session.execute(
+            text("SELECT SUM(cost_usd) FROM run_steps"), {}
+        )
+        total_cost = cost_result.scalar() or 0.0
+
+        # Cost by day (last 7 days)
+        cost_day_result = await session.execute(
+            text(
+                """
+                SELECT TO_CHAR(created_at, 'Dy') as day, COALESCE(SUM(cost_usd), 0)
+                FROM run_steps
+                WHERE created_at >= NOW() - INTERVAL '7 days'
+                GROUP BY day, DATE(created_at)
+                ORDER BY DATE(created_at)
+                """
+            ),
+            {},
+        )
+        cost_by_day = [{"name": r[0], "value": float(r[1])} for r in cost_day_result.all()]
+
+        # Average latency
+        lat_result = await session.execute(
+            text("SELECT AVG(latency_ms) FROM run_steps WHERE latency_ms IS NOT NULL"), {}
+        )
+        avg_latency = float(lat_result.scalar() or 0)
+
+        return MetricsSummary(
+            total_runs=total_runs,
+            avg_latency_ms=avg_latency,
+            success_rate=success_rate,
+            cost_today_usd=float(total_cost),
+            status_distribution=status_distribution,
+            cost_by_day=cost_by_day,
+        )

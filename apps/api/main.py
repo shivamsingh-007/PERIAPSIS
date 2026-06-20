@@ -28,6 +28,9 @@ from .routes.websocket import router as ws_router
 from .routes.resilience import router as resilience_router
 from .routes.fleet import router as fleet_router
 from .routes.graphify import router as graph_router
+from .routes.governance import router as governance_router
+from .routes.notifications import router as notifications_router
+from .routes.logs import router as logs_router
 
 logger = get_logger("api")
 
@@ -88,6 +91,9 @@ app = FastAPI(
         {"name": "scheduler", "description": "Run scheduling"},
         {"name": "export", "description": "Data export"},
         {"name": "health", "description": "System health checks"},
+        {"name": "governance", "description": "Governance events and approvals"},
+        {"name": "notifications", "description": "Notification subscriptions and jobs"},
+        {"name": "logs", "description": "Platform event logs"},
     ],
 )
 
@@ -108,6 +114,9 @@ app.include_router(ws_router)
 app.include_router(resilience_router)
 app.include_router(fleet_router)
 app.include_router(graph_router)
+app.include_router(governance_router)
+app.include_router(notifications_router)
+app.include_router(logs_router)
 
 
 @app.get("/health", response_model=HealthResponse)

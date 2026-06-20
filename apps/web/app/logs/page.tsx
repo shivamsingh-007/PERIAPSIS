@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { RefreshCw, Download, Filter } from 'lucide-react';
+import { RefreshCw, Download } from 'lucide-react';
 import { clsx } from 'clsx';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 interface LogEntry {
   timestamp: string;
@@ -24,50 +26,27 @@ export default function LogsPage() {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
-
-  useEffect(() => {
-    fetchLogs();
-  }, []);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchLogs = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      // Demo data
-      setLogs([
-        {
-          timestamp: new Date().toISOString(),
-          level: 'INFO',
-          logger: 'api',
-          message: 'Application starting',
-        },
-        {
-          timestamp: new Date(Date.now() - 60000).toISOString(),
-          level: 'INFO',
-          logger: 'runs',
-          message: 'Run created',
-          run_id: 'run-001',
-          tenant_id: 'tenant-001',
-        },
-        {
-          timestamp: new Date(Date.now() - 120000).toISOString(),
-          level: 'WARNING',
-          logger: 'policy',
-          message: 'Medium risk action requires approval',
-          run_id: 'run-002',
-        },
-        {
-          timestamp: new Date(Date.now() - 180000).toISOString(),
-          level: 'ERROR',
-          logger: 'tool',
-          message: 'Tool execution failed: API timeout',
-          run_id: 'run-003',
-        },
-      ]);
-    } catch (error) {
-      console.error('Failed to fetch logs:', error);
+      const levelParam = filter !== 'all' ? `?level=${filter}` : '';
+      const res = await fetch(`${API_URL}/logs${levelParam}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setLogs(data);
+    } catch (err: any) {
+      setError(err.message ?? 'Failed to fetch logs');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchLogs();
+  }, [filter]);
 
   const filteredLogs =
     filter === 'all' ? logs : logs.filter((log) => log.level === filter);
@@ -89,6 +68,7 @@ export default function LogsPage() {
             <option value="INFO">Info</option>
             <option value="WARNING">Warning</option>
             <option value="ERROR">Error</option>
+            <option value="DEBUG">Debug</option>
           </select>
           <button
             onClick={fetchLogs}
@@ -98,33 +78,39 @@ export default function LogsPage() {
             <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </button>
-          <button className="btn-secondary h-9">
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </button>
         </div>
       </div>
 
+      {error && (
+        <div className="card p-4 text-center text-red-500">
+          Failed to load logs: {error}
+        </div>
+      )}
+
       <div className="card overflow-hidden">
         <div className="max-h-[600px] overflow-y-auto font-mono text-sm">
-          {filteredLogs.map((log, index) => (
-            <div
-              key={index}
-              className="flex items-start gap-4 px-4 py-2 border-b last:border-0 hover:bg-muted/50"
-            >
-              <span className="text-muted-foreground whitespace-nowrap">
-                {new Date(log.timestamp).toLocaleTimeString()}
-              </span>
-              <span className={clsx('font-semibold w-16', levelColors[log.level])}>
-                {log.level}
-              </span>
-              <span className="text-muted-foreground w-24 truncate">{log.logger}</span>
-              <span className="flex-1">{log.message}</span>
-              {log.run_id && (
-                <span className="text-xs text-muted-foreground">{log.run_id}</span>
-              )}
-            </div>
-          ))}
+          {filteredLogs.length === 0 && !loading ? (
+            <div className="text-center py-12 text-muted-foreground">No log entries</div>
+          ) : (
+            filteredLogs.map((log, index) => (
+              <div
+                key={index}
+                className="flex items-start gap-4 px-4 py-2 border-b last:border-0 hover:bg-muted/50"
+              >
+                <span className="text-muted-foreground whitespace-nowrap">
+                  {new Date(log.timestamp).toLocaleTimeString()}
+                </span>
+                <span className={clsx('font-semibold w-16', levelColors[log.level])}>
+                  {log.level}
+                </span>
+                <span className="text-muted-foreground w-24 truncate">{log.logger}</span>
+                <span className="flex-1">{log.message}</span>
+                {log.run_id && (
+                  <span className="text-xs text-muted-foreground">{log.run_id}</span>
+                )}
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

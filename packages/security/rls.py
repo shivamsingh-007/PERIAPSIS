@@ -72,3 +72,22 @@ class TenantIsolator:
 
 
 tenant_isolator = TenantIsolator()
+
+
+async def get_current_tenant(
+    request: Request,
+) -> uuid.UUID:
+    """FastAPI dependency that extracts tenant_id from request state.
+
+    Used by fleet.py and resilience.py for backwards compat.
+    Falls back to X-Tenant-ID header if middleware hasn't set state.
+    """
+    tenant_id = getattr(request.state, "tenant_id", None)
+    if tenant_id is None:
+        header_val = request.headers.get("X-Tenant-ID")
+        if header_val:
+            tenant_id = uuid.UUID(header_val)
+    if tenant_id is None:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=400, detail="Missing tenant_id")
+    return tenant_id

@@ -1,56 +1,78 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { CheckCircle, XCircle, RefreshCw } from 'lucide-react';
+import { CheckCircle, XCircle, RefreshCw, Circle } from 'lucide-react';
 import { clsx } from 'clsx';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 interface HealthStatus {
   status: string;
   database: string;
   timestamp: number;
+  langfuse?: boolean;
+  redis?: boolean;
+  supabase?: boolean;
 }
 
 export default function HealthPage() {
   const [health, setHealth] = useState<HealthStatus | null>(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchHealth();
-  }, []);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchHealth = async () => {
     setLoading(true);
+    setError(null);
     try {
-      const response = await fetch('/api/health');
+      const response = await fetch(`${API_URL}/health`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       setHealth(data);
-    } catch (error) {
-      setHealth({
-        status: 'error',
-        database: 'disconnected',
-        timestamp: Date.now() / 1000,
-      });
+    } catch (err: any) {
+      setError(err.message ?? 'Failed to fetch health');
+      setHealth(null);
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchHealth();
+  }, []);
+
+  const getStatusIcon = (ok: boolean) =>
+    ok ? (
+      <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+    ) : (
+      <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
+    );
+
+  const getStatusBg = (ok: boolean) =>
+    ok ? 'bg-green-100 dark:bg-green-900/30' : 'bg-red-100 dark:bg-red-900/30';
+
+  const getStatusText = (ok: boolean) =>
+    ok ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400';
+
   const services = [
     {
       name: 'API Server',
-      status: health?.status === 'ok' ? 'healthy' : 'error',
+      healthy: health?.status === 'ok',
     },
     {
       name: 'PostgreSQL',
-      status: health?.database === 'connected' ? 'healthy' : 'error',
+      healthy: health?.database === 'connected',
     },
     {
       name: 'Redis',
-      status: 'healthy',
+      healthy: health?.redis ?? true,
     },
     {
       name: 'Langfuse',
-      status: 'healthy',
+      healthy: health?.langfuse ?? false,
+    },
+    {
+      name: 'Supabase',
+      healthy: health?.supabase ?? false,
     },
   ];
 
@@ -61,44 +83,33 @@ export default function HealthPage() {
           <h1 className="text-2xl font-bold">Health</h1>
           <p className="text-muted-foreground">System health status</p>
         </div>
-        <button
-          onClick={fetchHealth}
-          className="btn-secondary h-9"
-          disabled={loading}
-        >
+        <button onClick={fetchHealth} className="btn-secondary h-9" disabled={loading}>
           <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
           Refresh
         </button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      {error && (
+        <div className="card p-4 text-center text-red-500">
+          Failed to load health: {error}
+        </div>
+      )}
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {services.map((service) => (
           <div key={service.name} className="card p-4 flex items-center gap-4">
             <div
               className={clsx(
                 'h-10 w-10 rounded-lg flex items-center justify-center',
-                service.status === 'healthy'
-                  ? 'bg-green-100 dark:bg-green-900/30'
-                  : 'bg-red-100 dark:bg-red-900/30'
+                getStatusBg(service.healthy)
               )}
             >
-              {service.status === 'healthy' ? (
-                <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
-              ) : (
-                <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
-              )}
+              {getStatusIcon(service.healthy)}
             </div>
             <div>
               <p className="font-medium">{service.name}</p>
-              <p
-                className={clsx(
-                  'text-sm',
-                  service.status === 'healthy'
-                    ? 'text-green-600 dark:text-green-400'
-                    : 'text-red-600 dark:text-red-400'
-                )}
-              >
-                {service.status === 'healthy' ? 'Healthy' : 'Unhealthy'}
+              <p className={clsx('text-sm', getStatusText(service.healthy))}>
+                {service.healthy ? 'Healthy' : 'Unhealthy'}
               </p>
             </div>
           </div>
