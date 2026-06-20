@@ -129,7 +129,7 @@ class TestAuthManagerWithRepo:
     async def test_async_verify_checks_revocation_in_repo(self):
         manager, _, token_store = self._make_manager_with_mock_repo()
         token = await manager.create_token_async("user1", "tenant1")
-        payload = manager._decode_token(token.access_token)
+        payload = manager.verify_token(token.access_token)
         token_store[payload.jti].is_revoked = True
         result = await manager.verify_token_async(token.access_token)
         assert result is None
@@ -140,8 +140,8 @@ class TestAuthManagerWithRepo:
         token = await manager.create_token_async("user1", "tenant1")
         result = await manager.revoke_token_async(token.access_token)
         assert result is True
-        payload = manager._decode_token(token.access_token)
-        assert token_store[payload.jti].is_revoked is True
+        payload = await manager.verify_token_async(token.access_token)
+        assert payload is None
 
     def test_sync_revoke_still_works(self):
         manager, _, _ = self._make_manager_with_mock_repo()

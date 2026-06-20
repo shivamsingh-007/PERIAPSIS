@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import hashlib
-import hmac
 import secrets
 import time
 import uuid
@@ -61,37 +59,37 @@ class AuthManager:
         expires_in: int = 3600,
     ) -> AuthToken:
         """Create token with optional DB persistence."""
+        jti = str(uuid.uuid4())
+        token_str = self._encode_token_pjwt(subject, tenant_id, role, permissions or [], expires_in, jti=jti)
         now = time.time()
-        payload = TokenPayload(
+
+        if self.auth_repo:
+            try:
+                await self.auth_repo.create_token(
+                    token_id=jti,
+                    tenant_id=tenant_id,
+                    user_id=subject,
+                    token_data=token_str,
+                    expires_at=datetime.fromtimestamp(now + expires_in, tz=timezone.utc),
+                )
+            except Exception as e:
+                logger.warning(f"Failed to persist token to DB: {e}")
+
+        self._tokens[jti] = TokenPayload(
             sub=subject,
             tenant_id=tenant_id,
             role=role,
             permissions=permissions or [],
             exp=now + expires_in,
             iat=now,
+            jti=jti,
         )
 
-        token = self._encode_token(payload)
-
-        if self.auth_repo:
-            try:
-                await self.auth_repo.create_token(
-                    token_id=payload.jti,
-                    tenant_id=tenant_id,
-                    user_id=subject,
-                    token_data=token,
-                    expires_at=datetime.fromtimestamp(payload.exp, tz=timezone.utc),
-                )
-            except Exception as e:
-                logger.warning(f"Failed to persist token to DB: {e}")
-
-        self._tokens[payload.jti] = payload
-
         refresh_token = secrets.token_urlsafe(64)
-        self._refresh_tokens[refresh_token] = payload.jti
+        self._refresh_tokens[refresh_token] = jti
 
         return AuthToken(
-            access_token=token,
+            access_token=token_str,
             expires_in=expires_in,
             refresh_token=refresh_token,
         )
@@ -105,24 +103,25 @@ class AuthManager:
         expires_in: int = 3600,
     ) -> AuthToken:
         """Sync token creation (in-memory only)."""
+        jti = str(uuid.uuid4())
+        token_str = self._encode_token_pjwt(subject, tenant_id, role, permissions or [], expires_in, jti=jti)
         now = time.time()
-        payload = TokenPayload(
+
+        self._tokens[jti] = TokenPayload(
             sub=subject,
             tenant_id=tenant_id,
             role=role,
             permissions=permissions or [],
             exp=now + expires_in,
             iat=now,
+            jti=jti,
         )
 
-        token = self._encode_token(payload)
-        self._tokens[payload.jti] = payload
-
         refresh_token = secrets.token_urlsafe(64)
-        self._refresh_tokens[refresh_token] = payload.jti
+        self._refresh_tokens[refresh_token] = jti
 
         return AuthToken(
-            access_token=token,
+            access_token=token_str,
             expires_in=expires_in,
             refresh_token=refresh_token,
         )
@@ -130,21 +129,21 @@ class AuthManager:
     async def verify_token_async(self, token: str) -> TokenPayload | None:
         """Verify token with optional DB lookup for revocation."""
         try:
-            payload = self._decode_token(token)
+            payload_dict = self._decode_token_pjwt(token)
+            jti = payload_dict.get("jti", "")
 
             if self.auth_repo:
                 try:
-                    record = await self.auth_repo.get_token(payload.jti)
+                    record = await self.auth_repo.get_token(jti)
                     if record and record.is_revoked:
                         return None
                 except Exception:
                     pass
 
-            if payload.jti in self._revoked_tokens:
+            if jti in self._revoked_tokens:
                 return None
-            if payload.exp < time.time():
-                return None
-            return payload
+
+            return TokenPayload(**payload_dict)
         except Exception as e:
             logger.warning(f"Token verification failed: {e}")
             return None
@@ -152,12 +151,11 @@ class AuthManager:
     def verify_token(self, token: str) -> TokenPayload | None:
         """Sync token verification (in-memory only)."""
         try:
-            payload = self._decode_token(token)
-            if payload.jti in self._revoked_tokens:
+            payload_dict = self._decode_token_pjwt(token)
+            jti = payload_dict.get("jti", "")
+            if jti in self._revoked_tokens:
                 return None
-            if payload.exp < time.time():
-                return None
-            return payload
+            return TokenPayload(**payload_dict)
         except Exception as e:
             logger.warning(f"Token verification failed: {e}")
             return None
@@ -214,49 +212,52 @@ class AuthManager:
             return True
         return permission in payload.permissions
 
-    def _encode_token(self, payload: TokenPayload) -> str:
-        import json
-        import base64
+    def _encode_token_pjwt(
+        self,
+        subject: str,
+        tenant_id: str,
+        role: str,
+        permissions: list[str],
+        expires_in: int,
+        jti: str | None = None,
+    ) -> str:
+        """Encode token using PyJWT (standard)."""
+        from packages.security.jwt_utils import create_access_token
+        return create_access_token(
+            subject=subject,
+            tenant_id=tenant_id,
+            role=role,
+            permissions=permissions,
+            expires_delta=timedelta(seconds=expires_in),
+            jti=jti,
+            secret_key=self.secret_key,
+        )
 
-        header = base64.urlsafe_b64encode(
-            json.dumps({"alg": "HS256", "typ": "JWT"}).encode()
-        ).decode().rstrip("=")
+    def _decode_token_pjwt(self, token: str) -> dict[str, Any]:
+        """Decode token using PyJWT (standard)."""
+        from packages.security.jwt_utils import decode_access_token
+        return decode_access_token(token, secret_key=self.secret_key)
 
-        body = base64.urlsafe_b64encode(
-            payload.model_dump_json().encode()
-        ).decode().rstrip("=")
 
-        signature = hmac.new(
-            self.secret_key.encode(),
-            f"{header}.{body}".encode(),
-            hashlib.sha256,
-        ).hexdigest()
+def _extract_jti(token_str: str) -> str:
+    """Extract jti from an encoded JWT without verifying (for in-memory lookup).
 
-        return f"{header}.{body}.{signature}"
+    PyJWT produces 3-part tokens: header.payload.signature
+    """
+    import base64
+    import json
 
-    def _decode_token(self, token: str) -> TokenPayload:
-        import json
-        import base64
-
-        parts = token.split(".")
-        if len(parts) != 3:
-            raise ValueError("Invalid token format")
-
-        header, body, signature = parts
-
-        expected_sig = hmac.new(
-            self.secret_key.encode(),
-            f"{header}.{body}".encode(),
-            hashlib.sha256,
-        ).hexdigest()
-
-        if not hmac.compare_digest(signature, expected_sig):
-            raise ValueError("Invalid signature")
-
-        padded_body = body + "=" * (4 - len(body) % 4)
-        payload_data = json.loads(base64.urlsafe_b64decode(padded_body))
-
-        return TokenPayload(**payload_data)
+    try:
+        parts = token_str.split(".")
+        if len(parts) < 2:
+            return ""
+        # For 3-part JWTs (PyJWT), payload is at index 1
+        payload_b64 = parts[1]
+        payload_b64 += "=" * (4 - len(payload_b64) % 4)
+        payload_data = json.loads(base64.urlsafe_b64decode(payload_b64))
+        return payload_data.get("jti", "")
+    except Exception:
+        return ""
 
 
 auth_manager = AuthManager()

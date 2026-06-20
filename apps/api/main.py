@@ -5,6 +5,7 @@ import time
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy import text
 
@@ -15,6 +16,7 @@ from packages.middleware.rate_limit import RateLimitMiddleware
 from packages.middleware.shutdown import graceful_shutdown_lifespan
 from packages.security.rls import RowLevelSecurityMiddleware
 from packages.security.rbac import RBACMiddleware
+from packages.security.security_headers import SecurityHeadersMiddleware
 
 from .middleware.tracing import TracingMiddleware, setup_langfuse
 from .routes.approvals import router as approvals_router
@@ -77,8 +79,8 @@ app = FastAPI(
     ),
     version="0.1.0",
     lifespan=lifespan,
-    docs_url="/docs",
-    redoc_url="/redoc",
+    docs_url=None if os.environ.get("DISABLE_DOCS") else "/docs",
+    redoc_url=None if os.environ.get("DISABLE_DOCS") else "/redoc",
     openapi_tags=[
         {"name": "runs", "description": "Create and manage agent runs"},
         {"name": "approvals", "description": "Human approval workflows"},
@@ -97,6 +99,21 @@ app = FastAPI(
     ],
 )
 
+# --- CORS (first middleware — runs last in response) ---
+allowed_origins_raw = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000")
+allowed_origins = [o.strip() for o in allowed_origins_raw.split(",") if o.strip()]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Request-ID"],
+)
+
+# --- Security headers ---
+app.add_middleware(SecurityHeadersMiddleware)
+
+# --- Core middleware stack (runs in request order) ---
 app.add_middleware(TracingMiddleware)
 app.add_middleware(IdempotencyMiddleware)
 app.add_middleware(RateLimitMiddleware)

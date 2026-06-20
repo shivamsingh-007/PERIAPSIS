@@ -58,10 +58,27 @@ class RBACMiddleware(BaseHTTPMiddleware):
         self.get_role = get_role or self._default_get_role
 
     def _default_get_role(self, request: Request) -> Role:
-        role_str = request.headers.get("X-User-Role", "viewer")
+        """Derive role from JWT token in Authorization header.
+
+        SECURITY: Never read role from user-controlled headers like X-User-Role.
+        The role must come from the signed JWT token payload.
+        """
+        auth_header = request.headers.get("Authorization", "")
+        if not auth_header.startswith("Bearer "):
+            return Role.VIEWER
+
+        token = auth_header[len("Bearer "):]
         try:
-            return Role(role_str)
-        except ValueError:
+            from packages.security.jwt_utils import decode_access_token
+            import os
+            payload = decode_access_token(token, secret_key=os.environ.get("SECRET_KEY", "change-me-in-production"))
+            role_str = payload.get("role", "viewer")
+            try:
+                return Role(role_str)
+            except ValueError:
+                return Role.VIEWER
+        except Exception as e:
+            logger.debug(f"JWT decode failed in RBAC: {e}")
             return Role.VIEWER
 
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
