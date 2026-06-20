@@ -31,7 +31,7 @@ class SecretEntry(BaseModel):
 
 
 class SecretsManager:
-    def __init__(self, encryption_key: str | None = None):
+    def __init__(self, encryption_key: str | None = None, secrets_repo=None):
         if encryption_key:
             self._fernet = Fernet(encryption_key.encode() if isinstance(encryption_key, str) else encryption_key)
         else:
@@ -39,7 +39,74 @@ class SecretsManager:
             self._fernet = Fernet(key)
             logger.warning("Using generated encryption key - not persistent across restarts")
 
+        self.secrets_repo = secrets_repo
+        # In-memory fallback (used when no repo provided)
         self._secrets: dict[str, SecretEntry] = {}
+
+    async def set_secret_async(
+        self,
+        name: str,
+        value: str,
+        environment: str = "dev",
+        created_by: str = "system",
+        description: str = "",
+        tags: list[str] | None = None,
+        tenant_id: str = "default",
+    ) -> SecretEntry:
+        """Set secret with optional DB persistence."""
+        encrypted = self._fernet.encrypt(value.encode()).decode()
+        value_hash = hashlib.sha256(value.encode()).hexdigest()
+
+        if self.secrets_repo:
+            try:
+                record = await self.secrets_repo.set_secret(
+                    tenant_id=tenant_id,
+                    name=name,
+                    encrypted_value=encrypted,
+                    value_hash=value_hash,
+                    environment=environment,
+                    created_by=created_by,
+                    description=description,
+                    tags=tags,
+                )
+                return SecretEntry(
+                    secret_id=record.id,
+                    name=record.name,
+                    encrypted_value=record.encrypted_value,
+                    value_hash=record.value_hash,
+                    environment=record.environment,
+                    created_at=record.created_at,
+                    updated_at=record.updated_at,
+                    created_by=record.created_by,
+                    description=record.description,
+                    tags=record.tags or [],
+                    is_active=record.is_active,
+                )
+            except Exception as e:
+                logger.warning(f"Failed to persist secret to DB: {e}")
+
+        # In-memory fallback
+        existing = self.get_secret(name, environment)
+        if existing:
+            existing.encrypted_value = encrypted
+            existing.value_hash = value_hash
+            existing.updated_at = datetime.utcnow()
+            existing.description = description or existing.description
+            existing.tags = tags or existing.tags
+            return existing
+
+        entry = SecretEntry(
+            name=name,
+            encrypted_value=encrypted,
+            value_hash=value_hash,
+            environment=environment,
+            created_by=created_by,
+            description=description,
+            tags=tags or [],
+        )
+        key = f"{name}:{environment}"
+        self._secrets[key] = entry
+        return entry
 
     def set_secret(
         self,
@@ -50,6 +117,7 @@ class SecretsManager:
         description: str = "",
         tags: list[str] | None = None,
     ) -> SecretEntry:
+        """Sync secret set (in-memory only)."""
         encrypted = self._fernet.encrypt(value.encode()).decode()
         value_hash = hashlib.sha256(value.encode()).hexdigest()
 
@@ -77,6 +145,22 @@ class SecretsManager:
         self._secrets[key] = entry
         logger.info(f"Created secret: {name} ({environment})")
         return entry
+
+    async def get_secret_value_async(
+        self, name: str, environment: str = "dev", tenant_id: str = "default"
+    ) -> str | None:
+        """Get secret value with optional DB lookup."""
+        if self.secrets_repo:
+            try:
+                record = await self.secrets_repo.get_secret(tenant_id, name, environment)
+                if record:
+                    decrypted = self._fernet.decrypt(record.encrypted_value.encode())
+                    return decrypted.decode()
+            except Exception as e:
+                logger.warning(f"Failed to get secret from DB: {e}")
+
+        # In-memory fallback
+        return self.get_secret_value(name, environment)
 
     def get_secret(self, name: str, environment: str = "dev") -> SecretEntry | None:
         key = f"{name}:{environment}"

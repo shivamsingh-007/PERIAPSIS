@@ -1,17 +1,22 @@
 from __future__ import annotations
 
+import os
 import uuid
 from datetime import datetime
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
+from sqlalchemy import update
 from sqlalchemy import text
 
 from packages.schemas.database import get_session
+from packages.schemas.models import Run
 from packages.runtime.service import run_service
 from packages.runtime.state import BudgetPolicy, RunStatus, TerminalState
 
 router = APIRouter(prefix="/runs", tags=["runs"])
+
+ALLOWED_UPDATE_FIELDS = {"status", "terminal_state"}
 
 
 class CreateRunRequest(BaseModel):
@@ -143,27 +148,32 @@ async def update_run(
     status: str | None = None,
     terminal_state: str | None = None,
 ):
+    updates: dict[str, str] = {}
+    if status:
+        if status not in ALLOWED_UPDATE_FIELDS:
+            raise HTTPException(status_code=400, detail=f"Invalid field: {status}")
+        updates["status"] = status
+    if terminal_state:
+        if terminal_state not in ALLOWED_UPDATE_FIELDS:
+            raise HTTPException(status_code=400, detail=f"Invalid field: {terminal_state}")
+        updates["terminal_state"] = terminal_state
+
+    if not updates:
+        raise HTTPException(status_code=400, detail="No fields to update")
+
     async with get_session() as session:
-        updates = []
-        params: dict = {"run_id": run_id, "tenant_id": tenant_id}
-
-        if status:
-            updates.append("status = :status")
-            params["status"] = status
-        if terminal_state:
-            updates.append("terminal_state = :terminal_state")
-            params["terminal_state"] = terminal_state
-
-        if not updates:
-            raise HTTPException(status_code=400, detail="No fields to update")
-
-        updates.append("updated_at = NOW()")
+        stmt = (
+            update(Run)
+            .where(Run.run_id == run_id, Run.tenant_id == tenant_id)
+            .values(**updates)
+        )
+        await session.execute(stmt)
 
         result = await session.execute(
             text(
-                f"UPDATE runs SET {', '.join(updates)} WHERE run_id = :run_id AND tenant_id = :tenant_id RETURNING *"
+                "SELECT * FROM runs WHERE run_id = :run_id AND tenant_id = :tenant_id"
             ),
-            params,
+            {"run_id": run_id, "tenant_id": tenant_id},
         )
         row = result.mappings().first()
         if not row:

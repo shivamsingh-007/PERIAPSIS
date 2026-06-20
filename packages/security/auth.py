@@ -5,7 +5,7 @@ import hmac
 import secrets
 import time
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -43,12 +43,58 @@ class OIDCConfig(BaseModel):
 
 
 class AuthManager:
-    def __init__(self, secret_key: str | None = None):
+    def __init__(self, secret_key: str | None = None, auth_repo=None):
         self.secret_key = secret_key or secrets.token_urlsafe(32)
+        self.auth_repo = auth_repo
+        # In-memory fallback (used when no repo provided)
         self._tokens: dict[str, TokenPayload] = {}
         self._refresh_tokens: dict[str, str] = {}
         self._revoked_tokens: set[str] = set()
         self._oidc_configs: dict[str, OIDCConfig] = {}
+
+    async def create_token_async(
+        self,
+        subject: str,
+        tenant_id: str,
+        role: str = "viewer",
+        permissions: list[str] | None = None,
+        expires_in: int = 3600,
+    ) -> AuthToken:
+        """Create token with optional DB persistence."""
+        now = time.time()
+        payload = TokenPayload(
+            sub=subject,
+            tenant_id=tenant_id,
+            role=role,
+            permissions=permissions or [],
+            exp=now + expires_in,
+            iat=now,
+        )
+
+        token = self._encode_token(payload)
+
+        if self.auth_repo:
+            try:
+                await self.auth_repo.create_token(
+                    token_id=payload.jti,
+                    tenant_id=tenant_id,
+                    user_id=subject,
+                    token_data=token,
+                    expires_at=datetime.fromtimestamp(payload.exp, tz=timezone.utc),
+                )
+            except Exception as e:
+                logger.warning(f"Failed to persist token to DB: {e}")
+
+        self._tokens[payload.jti] = payload
+
+        refresh_token = secrets.token_urlsafe(64)
+        self._refresh_tokens[refresh_token] = payload.jti
+
+        return AuthToken(
+            access_token=token,
+            expires_in=expires_in,
+            refresh_token=refresh_token,
+        )
 
     def create_token(
         self,
@@ -58,6 +104,7 @@ class AuthManager:
         permissions: list[str] | None = None,
         expires_in: int = 3600,
     ) -> AuthToken:
+        """Sync token creation (in-memory only)."""
         now = time.time()
         payload = TokenPayload(
             sub=subject,
@@ -80,7 +127,30 @@ class AuthManager:
             refresh_token=refresh_token,
         )
 
+    async def verify_token_async(self, token: str) -> TokenPayload | None:
+        """Verify token with optional DB lookup for revocation."""
+        try:
+            payload = self._decode_token(token)
+
+            if self.auth_repo:
+                try:
+                    record = await self.auth_repo.get_token(payload.jti)
+                    if record and record.is_revoked:
+                        return None
+                except Exception:
+                    pass
+
+            if payload.jti in self._revoked_tokens:
+                return None
+            if payload.exp < time.time():
+                return None
+            return payload
+        except Exception as e:
+            logger.warning(f"Token verification failed: {e}")
+            return None
+
     def verify_token(self, token: str) -> TokenPayload | None:
+        """Sync token verification (in-memory only)."""
         try:
             payload = self._decode_token(token)
             if payload.jti in self._revoked_tokens:
@@ -92,7 +162,21 @@ class AuthManager:
             logger.warning(f"Token verification failed: {e}")
             return None
 
+    async def revoke_token_async(self, token: str) -> bool:
+        """Revoke token with optional DB persistence."""
+        payload = self.verify_token(token)
+        if payload:
+            self._revoked_tokens.add(payload.jti)
+            if self.auth_repo:
+                try:
+                    await self.auth_repo.revoke_token(payload.jti)
+                except Exception as e:
+                    logger.warning(f"Failed to revoke token in DB: {e}")
+            return True
+        return False
+
     def revoke_token(self, token: str) -> bool:
+        """Sync token revocation (in-memory only)."""
         payload = self.verify_token(token)
         if payload:
             self._revoked_tokens.add(payload.jti)

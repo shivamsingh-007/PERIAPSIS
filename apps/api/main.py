@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import time
 from contextlib import asynccontextmanager
 
@@ -40,7 +41,10 @@ class HealthResponse(BaseModel):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     setup_structured_logging()
-    database_url = "postgresql+asyncpg://agentic:agentic_dev@localhost:5432/agentic_loop"
+    database_url = os.environ.get(
+        "DATABASE_URL",
+        "postgresql+asyncpg://agentic:agentic_dev@localhost:5432/agentic_loop",
+    )
     init_engine(database_url)
     setup_langfuse(app)
     logger.info("Application starting")
