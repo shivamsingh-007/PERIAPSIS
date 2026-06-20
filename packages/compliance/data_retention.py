@@ -10,6 +10,8 @@ from packages.logging.structured import get_logger
 
 logger = get_logger("data_retention")
 
+_NOT_SET = object()
+
 
 class RetentionPolicy(BaseModel):
     policy_id: uuid.UUID = Field(default_factory=uuid.uuid4)
@@ -33,14 +35,15 @@ class DataRetentionPolicy:
         data_type: str,
         retention_days: int,
         archive_after_days: int | None = None,
-        delete_after_days: int | None = None,
+        delete_after_days: int | None = _NOT_SET,
     ) -> RetentionPolicy:
+        effective_delete = retention_days if delete_after_days is _NOT_SET else delete_after_days
         policy = RetentionPolicy(
             name=name,
             data_type=data_type,
             retention_days=retention_days,
             archive_after_days=archive_after_days,
-            delete_after_days=delete_after_days or retention_days,
+            delete_after_days=effective_delete,
         )
         self._policies[data_type] = policy
         logger.info(f"Created retention policy: {name} for {data_type}")

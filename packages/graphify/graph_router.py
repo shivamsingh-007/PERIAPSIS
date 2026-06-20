@@ -76,7 +76,7 @@ class GraphRouter:
         specializations: list[AgentSpecialization] | None = None,
     ):
         self._graph = graph or knowledge_graph
-        self._specializations = specializations or DEFAULT_SPECIALIZATIONS
+        self._specializations = specializations or list(DEFAULT_SPECIALIZATIONS)
 
     def route_task(self, task_description: str) -> RoutingDecision:
         task_lower = task_description.lower()

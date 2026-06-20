@@ -187,6 +187,12 @@ def validate(state: RunState) -> dict:
     if not last_step.output.get("success", False):
         return {"terminal_state": TerminalState.FAIL_INVARIANT, "status": RunStatus.COMPLETED}
 
+    result_text = last_step.output.get("result", "")
+    if not result_text:
+        return {
+            "validation_result": {"passed": True, "step": last_step.step_number},
+        }
+
     return {
         "validation_result": {"passed": True, "step": last_step.step_number},
         "no_progress_rounds": 0,
@@ -227,21 +233,21 @@ def reflect(state: RunState) -> dict:
 
 def decide(state: RunState) -> dict:
     """Determine next state."""
+    if state.iterations > state.budget.max_iterations:
+        return {"terminal_state": TerminalState.SUCCESS, "status": RunStatus.COMPLETED}
+
     budget_check = state.check_budget()
     if budget_check:
         return {"terminal_state": budget_check, "status": RunStatus.COMPLETED}
-
-    if state.iterations >= state.budget.max_iterations:
-        return {"terminal_state": TerminalState.SUCCESS, "status": RunStatus.COMPLETED}
 
     return {}
 
 
 def should_continue(state: RunState) -> Literal["continue", "escalate", "stop"]:
-    if state.is_terminal():
-        return "stop"
     if state.terminal_state == TerminalState.ESCALATED_TO_HUMAN:
         return "escalate"
+    if state.is_terminal():
+        return "stop"
     return "continue"
 
 

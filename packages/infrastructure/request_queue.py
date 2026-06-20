@@ -42,6 +42,7 @@ class RequestQueue:
         self._active: int = 0
         self._processed: list[QueuedRequest] = []
         self._handlers: dict[str, Callable[..., Coroutine]] = {}
+        self._counter: int = 0
 
     def register_handler(self, name: str, handler: Callable[..., Coroutine]) -> None:
         self._handlers[name] = handler
@@ -61,7 +62,8 @@ class RequestQueue:
             QueuePriority.LOW: 3,
         }.get(priority, 2)
 
-        await self._queue.put((priority_value, request))
+        self._counter += 1
+        await self._queue.put((priority_value, self._counter, request))
         logger.info(f"Enqueued request {request.request_id} with priority {priority.value}")
         return request
 
@@ -70,7 +72,7 @@ class RequestQueue:
             return None
 
         try:
-            priority_value, request = self._queue.get_nowait()
+            priority_value, _counter, request = self._queue.get_nowait()
         except asyncio.QueueEmpty:
             return None
 
@@ -89,7 +91,7 @@ class RequestQueue:
 
             if request.retries < request.max_retries:
                 request.retries += 1
-                await self._queue.put((priority_value, request))
+                await self._queue.put((priority_value, self._counter, request))
                 request.status = "retrying"
         finally:
             request.completed_at = datetime.utcnow()
